@@ -1,0 +1,142 @@
+:global {
+
+  #root {
+    height: 100%;
+  }
+
+  .loginForm {
+    padding: 16px 8px;
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+  }
+
+  /*面板容器*/
+  .wrapper {
+    padding: 16px 30px 16px 8px;
+    background: #f8f8f8;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+
+  /*搜索表单控件*/
+  .controlWrapper {
+
+    .ant-form-item { /*表单控件行间距*/
+      margin-bottom: 5px;
+    }
+
+    .buttonWrapper { /*按钮控件*/
+      text-align: right;
+      padding-top: 5px;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  /* 子层模板按钮*/
+  .buttonSubWrapper {
+    text-align: left;
+    button {
+      margin-left: 10px;
+    }
+  }
+
+  .CascaderBg { /*级联控件背景*/
+    background-color: #fff;
+  }
+
+  /*表格奇偶数行间数据背景分隔*/
+  table {
+    tbody {
+      tr:nth-child(even) {
+        background: #f7f7f6;
+      }
+    }
+  }
+
+  /*default heigth when no data in grid
+  .ant-table-placeholder{
+    height: 350px !important;
+  }
+*/
+  /*set the min height for grid*/
+  .ant-table-body{
+    min-height: 300px;
+  }
+
+  .transfer-left-table .ant-table-placeholder{
+    display: none;
+  }
+  .transfer-right-table .ant-table-placeholder{
+    display: none;
+  }
+  /*查看disabled*/
+  .ant-input[disabled],
+  fieldset[disabled] .ant-input,
+  .ant-select-disabled,
+  .ant-input-number-input[disabled] {
+    color: rgb(156, 149, 149) !important;
+  }
+
+
+  .ant-input-number-disabled .ant-input-number-input{
+    background-color:#f7f7f7 !important;
+  }
+
+  .CascaderBg .ant-input[disabled]{
+    background: rgba(217, 217, 217, 0.16);
+  }
+
+  .ant-input[disabled], fieldset[disabled] .ant-input {
+    background: rgba(217, 217, 217, 0.16) !important;
+  }
+
+  .serviceCheckboxDisable .ant-checkbox-wrapper span{
+    color: #666 !important;
+  }
+
+  .serviceCheckboxDisable .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #2db7f5;
+    border-color: #d9d9d9;
+  }
+
+  .ant-time-picker-large .ant-time-picker-input {
+    width: 100%;
+  }
+
+  /* 订单_在途追踪 */
+  .track-wrapper {
+    .ant-table-body {
+      min-height: 100px;
+    }
+  }
+
+  /*时间控件*/
+  .timePickerDefault {
+    width: 100% !important;
+  }
+
+  .navTab.ant-tabs-card > .ant-tabs-bar .ant-tabs-nav .ant-tabs-tab:nth-child(2) .anticon-cross{
+    width: 0 !important;
+  }
+
+  /* react-data-grid-select */
+  .grid-select-wrap select.editor-main {
+    height:100%;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .grid-select-wrap .ant-select-search--inline {
+    left: 0;
+    top: 0;
+  }
+
+
+
+}
+
