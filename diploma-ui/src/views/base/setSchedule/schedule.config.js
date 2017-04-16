@@ -2,7 +2,7 @@
 const buttons = [
     {
         label: '查询',
-        action: 'add',
+        action: 'search',
         icon: 'search',
     },
     {
@@ -26,19 +26,23 @@ const buttons = [
 
 const teacherColumn= [
     {
-        title: 'teacherName',
+        title: '姓名',
         dataIndex: 'teacherName',
     },
     {
-        title: 'teacherCode',
+        title: '教师编号',
         dataIndex: 'teacherCode',
     },
     {
-        title: 'course',
+        title: '联系方式',
+        dataIndex: 'tel'
+    },
+    {
+        title: '所授课程',
         dataIndex: 'course',
     },
     {
-        title: 'remark',
+        title: '备注',
         dataIndex: 'remark',
     }
 ];

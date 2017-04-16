@@ -98,7 +98,7 @@ class App extends React.Component {
 
     render() {
 
-        const { company='tangu', userName='001', loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
+        const { company='myj', userName='myj', loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
 
         const { showPasswordModal } = this.state;
 
@@ -132,7 +132,7 @@ class App extends React.Component {
         return (
             <div className={styles.normal}>
                 <div className={styles.head}>
-                    <h1>药房管家系统</h1>
+                    <h1>CANMUSIC</h1>
                     <ul className={styles.sidebarUser}>
                         <li><a href="javascript:;"><Icon type="user" className={styles.headIcon}/> {company}</a> </li>
                         <li><a href="javascript:;">{userName}</a></li>
@@ -183,7 +183,7 @@ class App extends React.Component {
                 </Modal>
 
                 <div className={styles.foot}>
-                    技术支持：<a href="http://www.tangusoft.com" target="_blank">杭州唐古信息科技有限公司</a>
+
                 </div>
             </div>
         );

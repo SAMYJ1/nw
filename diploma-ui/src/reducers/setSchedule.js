@@ -86,7 +86,12 @@ let onDelTeacherLoad = (state=initialState, actionObj)=>{
     return {...state}
 };
 let onDelTeacherSuc = (state=initialState, actionObj)=>{
-    return {...state}
+    let id = actionObj.action.id;
+    let { teacherList } = state;
+    let delId = teacherList.findIndex(item=>item.id === id);
+    teacherList.splice(delId, 1);
+
+    return {...state, teacherList}
 };
 let onDelTeacherErr = (state=initialState, actionObj)=>{
     return {...state}
@@ -137,6 +142,7 @@ export function getTeacherList(action) {
 }
 
 export function getTeacherDetail(action) {
+    console.log(action)
     return {
         types:[GET_TEACHER_DETAIL_LOAD,GET_TEACHER_DETAIL_SUC,GET_TEACHER_DETAIL_ERR],
         promise: request.post(URL_GET_TEACHER_DETAIL).send(action),
@@ -152,7 +158,7 @@ export function modifySchedule(action) {
     }
 }
 
-export function addNewTeacher(action) {
+export function modifyTeacher(action) {
     return {
         types: [MODIFY_TEACHER_LOAD,MODIFY_TEACHER_SUC,MODIFY_TEACHER_ERR],
         promise: request.post(URL_ADD_TEACHER).send(action),
@@ -175,4 +181,5 @@ export function getStudentAndCourseList(action) {
         action
     }
 }
+
 

@@ -7,17 +7,17 @@ export function isPromise(value) {
 }
 
 export function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 export function delCookie(name)//删除cookie
 {
-	var exp = new Date();
+	let exp = new Date();
 	exp.setTime(exp.getTime() - 1);
-	var cval=getCookie(name);
-	if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	let cval=getCookie(name);
+	if(cval!==null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 } 
 
 

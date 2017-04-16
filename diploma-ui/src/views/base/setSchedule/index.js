@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col, Table, Modal, Spin, Form, Input, InputNumber, Select, Radio  } from 'antd';
-import { getTeacherList, getTeacherDetail, modifySchedule, getStudentAndCourseList } from '../../../reducers/setSchedule';
+import { getTeacherList, getTeacherDetail, delTeacher, modifySchedule, modifyTeacher, getStudentAndCourseList } from '../../../reducers/setSchedule';
 import Schedule from '../../../components/scheduleTable'
 import { ButtonGroup } from '../../../components/ButtonGroup';
 import { buttons,teacherColumn } from './schedule.config';
@@ -117,17 +117,25 @@ class Teacher extends Component{
     }
 
     onSearch(){
-        let searchData = this.props.form.getFieldsValue();
-        this.props.getTeacherList(searchData);
+        let searchData = this.props.form.getFieldValue('name');
+        console.info(searchData)
+        this.props.getTeacherList({name:searchData});
     }
     onAdd(){
         this.setState({showTeacherModal: true})
     }
     onReset(){
-        this.props.form.resetFields();
+        this.props.form.resetFields(['name']);
+    }
+    onDelete(){
+        let { selectedRowKeys } = this.state;
+        console.log(selectedRowKeys);
+        this.props.delTeacher({id: selectedRowKeys[0]});
+        this.setState({selectedRowKeys:[], selectedRows:[]})
     }
 
-    onLookDetail(){
+    onLookDetail(record){
+        this.props.form.setFieldsValue({teacher:{...record}});
         this.setState({showTeacherModal: true})
     }
     onLookSchedule(record){
@@ -136,9 +144,14 @@ class Teacher extends Component{
     }
 
     onSaveTeacher(){
+        let teacherInfo = this.props.form.getFieldsValue();
+
+        this.props.modifyTeacher(teacherInfo.teacher);
+        this.props.form.resetFields();
         this.setState({showTeacherModal: false})
     }
     onCancelTeacher(){
+        this.props.form.resetFields();
         this.setState({showTeacherModal: false})
     }
 
@@ -155,13 +168,13 @@ class Teacher extends Component{
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        let { showScheduleModal, selectedRowKeys, showTeacherModal } = this.state;
+        let { showScheduleModal, selectedRowKeys, selectedRows, showTeacherModal } = this.state;
         let { teacherList, teacherDetail, loading, stuAndCourList } = this.props;
         const buttons = this.getButtonStatus();
         const columns = this.columns;
 
-        let courseOptions = stuAndCourList.courseList ? stuAndCourList.courseList.map(item=>{
-            return <Option key={item}>{item}</Option>
+        let courseOptions = stuAndCourList.courseList ? stuAndCourList.courseList.map((item,index)=>{
+            return <Option key={index} value={item}>{item}</Option>
         }): [];
 
         let total = teacherList.length;
@@ -186,15 +199,15 @@ class Teacher extends Component{
         };
         return (
             <div>
-                <div>
+                <div className="controlWrapper wrapper">
                     <Row>
                         <Col span={6}>
                             <FormItem
                                 label="名字"
                                 labelCol={{span: 4}}
-                                wrapperCol={{span: 10}}
+                                wrapperCol={{span: 16}}
                             >
-                                {getFieldDecorator('teacherName',{
+                                {getFieldDecorator('name',{
                                     initialValue: ''
                                 })(
                                     <Input/>
@@ -204,13 +217,17 @@ class Teacher extends Component{
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col className="buttonWrapper">
                             <ButtonGroup dataProvider={ buttons } onClick={ ::this.onClickButton } />
                         </Col>
                     </Row>
                 </div>
 
-                <Modal width={1200} maskClosable={false}
+                <Modal
+                title="课程信息"
+                key={1}
+                width={1200}
+                maskClosable={false}
                 loading={false}
                 visible={ showScheduleModal }
                 onOk={ ::this.onSaveSchedule }
@@ -224,6 +241,8 @@ class Teacher extends Component{
                 </Modal>
 
                 <Modal
+                    title="教师信息"
+                    key={2}
                     width={600}
                     maskClosable={false}
                     visible={ showTeacherModal }
@@ -232,56 +251,57 @@ class Teacher extends Component{
                     okText={'保存'}
                     cancelText={'取消'}
                 >
-                    <Row>
-                        <Col span={12}>
+                    <Row key={1}>
+                        <Col key={1} span={12}>
                             <FormItem label="姓名" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacherName',{initialValue: ''})(
+                                {getFieldDecorator('teacher.teacherName',{initialValue: ''})(
                                     <Input/>
                                 )}
                             </FormItem>
                         </Col>
-                        <Col span={12}>
+                        <Col key={2} span={12}>
                             <FormItem label="教师编号" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacherCode',{initialValue: ''})(
+                                {getFieldDecorator('teacher.teacherCode',{initialValue: ''})(
                                     <Input/>
                                 )}
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col span={12}>
+                    <Row key={2}>
+                        <Col key={1} span={12}>
                             <FormItem label="性别" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('sex',{initialValue: 0})(
+                                {getFieldDecorator('teacher.sex',{initialValue: 0})(
                                     <RadioGroup>
-                                        <Radio value={0}>男</Radio>
-                                        <Radio value={1}>女</Radio>
+                                        <Radio key="1" value={0}>男</Radio>
+                                        <Radio key="2" value={1}>女</Radio>
                                     </RadioGroup>
                                 )}
                             </FormItem>
                         </Col>
-                        <Col span={12}>
+                        <Col key={2} span={12}>
                             <FormItem label="年龄" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('age',{initialValue: undefined})(
+                                {getFieldDecorator('teacher.age',{initialValue: undefined})(
                                     <InputNumber min={18} max={60} />
                                 )}
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row key={3}>
                         <Col span={12}>
                             <FormItem label="联系方式" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('tel',{initialValue: ''})(
+                                {getFieldDecorator('teacher.tel',{initialValue: ''})(
                                     <Input/>
                                 )}
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row key={4}>
                         <Col span={24}>
-                            <FormItem label="所授课程" labelCol={{span:4}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('course',{initialValue: ''})(
+                            <FormItem label="所授课程" labelCol={{span:4}} wrapperCol={{span: 18}}>
+                                {getFieldDecorator('teacher.course',{initialValue: undefined})(
                                     <Select
-                                        multiple
+                                        mode='multiple'
+                                        style={{width: '100%'}}
                                     >
                                         {courseOptions}
                                     </Select>
@@ -289,10 +309,10 @@ class Teacher extends Component{
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row key={5}>
                         <Col span={24}>
-                            <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('remark',{initialValue: ''})(
+                            <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 18}}>
+                                {getFieldDecorator('teacher.remark',{initialValue: ''})(
                                     <Input/>
                                 )}
                             </FormItem>
@@ -322,5 +342,5 @@ export default connect((state)=>{
     return {
         ...state.reducers.setSchedule
     }
-},(dispatch)=>(bindActionCreators({ getTeacherList, getTeacherDetail, modifySchedule, getStudentAndCourseList  },dispatch))
+},(dispatch)=>(bindActionCreators({ getTeacherList, getTeacherDetail, delTeacher, modifyTeacher, modifySchedule, getStudentAndCourseList  },dispatch))
 )(TeacherSchedule)
