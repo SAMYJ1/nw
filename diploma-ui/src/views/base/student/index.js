@@ -138,10 +138,15 @@ class Student extends Component{
 
         const columns = this.columns;
         const buttons = this.getButtonStatus();
+        const levels = [
+            {label: '1',value: 1},
+            {label: '2',value: 2},
+        ];
 
         let courseOptions = courseList ? courseList.map((item,index)=>{
             return <Option key={index} value={item}>{item}</Option>
         }): [];
+        let levelOptions = levels ? levels.map(item=><Option key={item.value} value={item.value}>{item.label}</Option>) : [];
 
         let total = studentList.length;
         const pagination = {
@@ -255,8 +260,12 @@ class Student extends Component{
                         <Col span={12}>
                             <FormItem label="等级" labelCol={{span: 8}} wrapperCol={{span: 12}}>
                                 {getFieldDecorator('student.level',{
+                                    initialValue:undefined
                                 })(
-                                    <Input/>
+                                    <Select style={{width: '100%'}}>
+                                        {levelOptions}
+                                    </Select>
+
                                 )}
                             </FormItem>
                         </Col>
