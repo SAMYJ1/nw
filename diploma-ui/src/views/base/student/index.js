@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Table, Form, Select, Spin, Input, Radio, Modal } from 'antd'
 import { ButtonGroup } from '../../../components/ButtonGroup';
 import { getStudentList, delStudent, modifyStudent } from '../../../reducers/student';
-import { getStudentAndCourseList } from '../../../reducers/setSchedule';
+import { getStudentAndCourseList } from '../../../reducers/teacher';
 import { studentColumn, buttons } from './student.config';
 
 const FormItem = Form.Item;
@@ -18,6 +18,7 @@ class Student extends Component{
             selectedRows: [],
             selectedRowKeys: [],
             showStudentModal: false,
+            record: {},
         };
         this.columns = JSON.parse(JSON.stringify(studentColumn));
         this.buttons = JSON.parse(JSON.stringify(buttons));
@@ -28,6 +29,11 @@ class Student extends Component{
     }
     componentDidMount(){
         this.onSearch();
+    }
+    componentWillReceiveProps(nextProps){
+        if (!this.props.reload && nextProps.reload){
+            this.onSearch();
+        }
     }
 
 
@@ -114,20 +120,24 @@ class Student extends Component{
     }
     onLookDetail(record){
         this.props.form.setFieldsValue({student:{...record}});
-        this.setState({showStudentModal: true})
+        this.setState({showStudentModal: true, record})
     }
 
     onSaveStudent(){
-        let data = this.props.form.getFieldsValue();
-        this.props.modifyStudent(data.student);
+        let { record } = this.state;
+
+        let data = this.props.form.getFieldsValue(['student']);
+
+        let newData = record.id ? {...data.student, id: record.id}: {...data.student};
+        this.props.modifyStudent(newData);
         console.info(data)
 
         this.props.form.resetFields();
-        this.setState({showStudentModal:false})
+        this.setState({showStudentModal:false, record: {}})
     }
     onCancelSave(){
         this.props.form.resetFields();
-        this.setState({showStudentModal:false})
+        this.setState({showStudentModal:false, record: {}})
     }
 
     render(){
@@ -139,14 +149,15 @@ class Student extends Component{
         const columns = this.columns;
         const buttons = this.getButtonStatus();
         const levels = [
-            {label: '1',value: 1},
-            {label: '2',value: 2},
+            {label: '1',value: '1'},
+            {label: '2',value: '2'},
+            {label: '3',value: '3'},
         ];
 
         let courseOptions = courseList ? courseList.map((item,index)=>{
             return <Option key={index} value={item}>{item}</Option>
         }): [];
-        let levelOptions = levels ? levels.map(item=><Option key={item.value} value={item.value}>{item.label}</Option>) : [];
+        let levelOptions = levels ? levels.map(item=><Option key={item.value}>{item.label}</Option>) : [];
 
         let total = studentList.length;
         const pagination = {
@@ -271,6 +282,26 @@ class Student extends Component{
                         </Col>
                     </Row>
                     <Row>
+                        <Col span={12}>
+                            <FormItem label="家长联系方式" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                {getFieldDecorator('student.parentTel',{
+                                })(
+                                    <Input/>
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            <FormItem label="学校" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                {getFieldDecorator('student.school',{
+                                    initialValue:undefined
+                                })(
+                                    <Input/>
+                                )}
+                            </FormItem>
+                        </Col>
+                    </Row>
+
+                    <Row>
                         <Col span={24}>
                             <FormItem label="报名课程" labelCol={{span:4}} wrapperCol={{span: 18}}>
                                 {getFieldDecorator('student.course',{initialValue: undefined})(
@@ -288,7 +319,7 @@ class Student extends Component{
                         <Col span={24}>
                             <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 18}}>
                                 {getFieldDecorator('student.remark',{initialValue: ''})(
-                                    <Input/>
+                                    <Input type="textarea" rows={3}/>
                                 )}
                             </FormItem>
                         </Col>
@@ -315,7 +346,7 @@ const StudentInfo = Form.create()(Student);
 export default connect(state=>{
     return {
         student: {...state.reducers.student},
-        courseList: state.reducers.setSchedule.stuAndCourList.courseList
+        courseList: state.reducers.teacher.stuAndCourList.courseList
     }
 },dispatch=>(bindActionCreators({ getStudentList, delStudent, modifyStudent, getStudentAndCourseList },dispatch))
 )(StudentInfo);

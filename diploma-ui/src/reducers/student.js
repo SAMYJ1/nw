@@ -18,6 +18,7 @@ const DELETE_STUDENT_ERR = 'STUDENT.DELETE_STUDENT_ERR';
 const initialState = {
     loading: false,
     studentList: [],
+    reload: false,
 };
 
 
@@ -33,19 +34,22 @@ let onGetStudentListErr = (state=initialState, actionObj)=>{
 };
 
 let onModifyStudentLoad = (state=initialState, actionObj)=>{
-    return {...state, }
+    return {...state, reload: false}
 };
 let onModifyStudentSuc = (state=initialState, actionObj)=>{
-    return {...state, }
+    return {...state, reload: true}
 };
 let onModifyStudentErr = (state=initialState, actionObj)=>{
-    return {...state,}
+    return {...state, reload: false}
 };
 let onDelStudentLoad = (state=initialState, actionObj)=>{
     return {...state, }
 };
 let onDelStudentSuc = (state=initialState, actionObj)=>{
-    return {...state, }
+    let studentList = state.studentList;
+    let rmIdx = studentList.findIndex(item=> item.id === actionObj.action.id);
+    studentList.splice(rmIdx,1);
+    return {...state, studentList }
 };
 let onDelStudentErr = (state=initialState, actionObj)=>{
     return {...state, }
