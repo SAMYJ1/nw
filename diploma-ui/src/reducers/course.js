@@ -28,7 +28,7 @@ let onGetCourseListSuc = (state=initialState, actionObj)=>{
     return {...state, loading: false, courseList};
 };
 let onGetCourseListErr = (state=initialState, actionObj)=>{
-    return {...state};
+    return {...state, loading: false};
 };
 let onModifyCourseLoad = (state=initialState, actionObj)=>{
     return {...state, reload: false};

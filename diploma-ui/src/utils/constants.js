@@ -29,3 +29,6 @@ export const URL_GET_COURSE_LIST = HOST + '/api/getCourseList';
 export const URL_MODIFY_COURSE = HOST + '/api/modifyCourse';
 export const URL_DELETE_COURSE = HOST + '/api/deleteCourse';
 
+//个人课程表
+export const URL_GET_PER_SCHEDULE = HOST + '/api/getPersonalSchedule';
+
