@@ -141,7 +141,7 @@ export default class Schedule extends Component{
                 render: (text, record, index)=>(
                     <InputEditableCell
                         value={text}
-                        onChange={this.onCellChange}/>
+                        onChange={this.onCellChange(index, 'time')}/>
                 )
             },
             {

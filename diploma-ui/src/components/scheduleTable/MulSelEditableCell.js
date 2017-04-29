@@ -19,7 +19,6 @@ export default class MulSelEditableCell extends Component{
     }
     
     componentDidMount(){
-        console.error('111111111111111111111111')
         if (this.props.record){
             let {courseList, studentList } = this.props.record;
             let { students, course, address } = this.props.value;
@@ -27,7 +26,7 @@ export default class MulSelEditableCell extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
-        console.info("mulsel nextProps: ",nextProps);
+
         if (this.props.value !== nextProps.value){
             let { students, course, address } = nextProps.value;
             this.setState({students, course, address});

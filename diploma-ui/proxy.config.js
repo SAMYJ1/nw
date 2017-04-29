@@ -17,6 +17,9 @@ module.exports = {
                 {
 					"id": 4, "name": "课程信息", "url": '/base/course', "icon": 'setting'
 				},
+{
+					"id": 5, "name": "个人课表", "url": '/base/schedule', "icon": 'setting'
+				},
 
 			]
 		})
@@ -48,7 +51,7 @@ module.exports = {
                         "friday": { 'course':'c1','students':['a','b'], 'address':'z'},
                         "saturday": { 'course':'c1','students':['a','b'], 'address':'z'},
                         "sunday": { 'course':'c1','students':['a','b'], 'address':'z'},
-                        "time": '9.30-10.30',
+                        "time": '9:30-10:30',
                     },
                     {
                         "id": 1,
@@ -59,7 +62,7 @@ module.exports = {
                         "friday": { 'course':'c2','students':['a','bc'], 'address':'z'},
                         "saturday": { 'course':'c2','students':['a','bc'], 'address':'z'},
                         "sunday": { 'course':'c2','students':['a','bc'], 'address':'z'},
-                        "time": 'abc',
+                        "time": '8:30-9:30',
                     },
                 ],
 				"courseList": ['c1','c2','c3']
@@ -106,7 +109,7 @@ module.exports = {
 		})
 	},
 
-    //课程
+    //课程列表
     '/api/getCourseList': (req,res)=>{
 		res.json({
 			"data": [
@@ -121,6 +124,36 @@ module.exports = {
 
 				},
 
+			]
+		})
+	},
+
+	//个人课表
+    '/api/getPersonalSchedule': (req, res)=>{
+		res.json({
+			"data": [
+				{
+					"id": 1,
+                    "monday": { 'course':'c1','students':['s1','s3'], 'teacher': null, 'address':'z'},
+                    "tuesday": null,
+                    "wednesday": null,
+                    "thursday": null,
+                    "friday": null,
+                    "saturday": null,
+                    "sunday": { 'course':'c2','students':['s2'], 'teacher': null, 'address':'z'},
+                    "time": '9.30-10.30',
+				},
+				{
+                    "id": 2,
+                    "monday": null,
+                    "tuesday": { 'course':'c1','students':null, 'teacher': 'tom','address':'z'},
+                    "wednesday": null,
+                    "thursday": null,
+                    "friday": null,
+                    "saturday": null,
+                    "sunday": { 'course':'c1','students':null, 'teacher': 'lucy', 'address':'z'},
+                    "time": '9.00-10.00',
+				}
 			]
 		})
 	}
