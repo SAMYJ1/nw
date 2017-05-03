@@ -6,6 +6,8 @@ import {ButtonGroup} from '../../../components/ButtonGroup';
 import {getCourseList, modifyCourse, deleteCourse} from '../../../reducers/course';
 import { getTeacherList } from '../../../reducers/teacher';
 import {buttons, courseColumns} from './course.config';
+import CourseDetail from './courseDetail';
+
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -16,6 +18,7 @@ class Course extends Component {
         super(props);
         this.state = {
             showCourseModal: false,
+            showDetailModal: false,
             selectedRowKeys: [],
             selectedRows: [],
             record: {},
@@ -58,7 +61,9 @@ class Course extends Component {
             case 'delete':
                 this.onDelete();
                 break;
-
+            case 'detail':
+                this.onSetDetail();
+                break;
         }
     }
 
@@ -78,9 +83,11 @@ class Course extends Component {
             switch (action) {
 
                 case 'delete':
-
                     button.disabled = (len !== 1);
+                    break;
 
+                case 'detail':
+                    button.disabled = (len !== 1);
                     break;
 
             }
@@ -126,6 +133,12 @@ class Course extends Component {
         this.setState({selectedRowKeys: [], selectedRows: []})
     }
 
+    onSetDetail(){
+        let { selectedRowKeys, selectedRows } = this.state;
+
+        this.setState({showDetailModal: true})
+    }
+
     onLookDetail(record) {
         this.props.form.setFieldsValue({course: {...record}});
         this.setState({showCourseModal: true, record})
@@ -149,10 +162,18 @@ class Course extends Component {
         this.setState({showCourseModal: false, record: {}})
     }
 
+    //基础信息
+    onSaveDetail(){
+
+    }
+    onCancelDetail(){
+
+    }
+
 
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {selectedRows, selectedRowKeys, showCourseModal, } = this.state;
+        const {selectedRows, selectedRowKeys, showCourseModal, showDetailModal } = this.state;
         const { course, teacherList} = this.props;
 
         const columns = this.columns;
@@ -274,6 +295,15 @@ class Course extends Component {
                             </FormItem>
                         </Col>
                     </Row>
+                </Modal>
+                <Modal title="基础信息"
+                       visible={showDetailModal}
+                       width={600}
+                       maskClosable={false}
+                       onOk={ ::this.onSaveDetail }
+                       onCancel={ ::this.onCancelDetail }
+                >
+                    <CourseDetail/>
                 </Modal>
 
                 <Spin spinning={course.loading} tip="正在读取数据...">

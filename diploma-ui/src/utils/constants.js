@@ -31,4 +31,9 @@ export const URL_DELETE_COURSE = HOST + '/api/deleteCourse';
 
 //个人课程表
 export const URL_GET_PER_SCHEDULE = HOST + '/api/getPersonalSchedule';
+export const URL_CONFIRM_SCHEDULE = HOST + '/api/confirmSchedule';
 
+//交流
+export const URL_GET_COMMENT_LIST = HOST + '/api/getCommentList';
+export const URL_ADD_COMMENT = HOST + '/api/addComment';
+export const URL_ADD_REPLY = HOST + '/api/addReply';

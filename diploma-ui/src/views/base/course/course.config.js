@@ -20,6 +20,11 @@ const buttons = [
         action: 'delete',
         icon: 'delete'
     },
+    {
+        label: '详细',
+        action: 'detail',
+        icon: 'edit'
+    }
 ];
 
 const courseColumns= [

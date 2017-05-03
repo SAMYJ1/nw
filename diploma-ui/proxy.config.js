@@ -17,9 +17,12 @@ module.exports = {
                 {
 					"id": 4, "name": "课程信息", "url": '/base/course', "icon": 'setting'
 				},
-{
-					"id": 5, "name": "个人课表", "url": '/base/schedule', "icon": 'setting'
-				},
+                {
+                    "id": 5, "name": "个人课表", "url": '/base/schedule', "icon": 'setting'
+                },
+                {
+                    "id": 6, "name": "交流", "url": '/base/exchange', "icon": 'user'
+                },
 
 			]
 		})
@@ -131,29 +134,105 @@ module.exports = {
 	//个人课表
     '/api/getPersonalSchedule': (req, res)=>{
 		res.json({
-			"data": [
+			"data": {
+				"schedule": [
+                    {
+                        "id": 1,
+                        "monday": { 'course':'c1','students':['s1','s3'], 'teacher': null, 'address':'z'},
+                        "tuesday": null,
+                        "wednesday": null,
+                        "thursday": null,
+                        "friday": null,
+                        "saturday": null,
+                        "sunday": { 'course':'c2','students':['s2'], 'teacher': null, 'address':'z'},
+                        "time": '9:30-10:30',
+                    },
+                    {
+                        "id": 2,
+                        "monday": null,
+                        "tuesday": { 'course':'c1','students':null, 'teacher': 'tom','address':'z'},
+                        "wednesday": null,
+                        "thursday": null,
+                        "friday": null,
+                        "saturday": null,
+                        "sunday": { 'course':'c1','students':null, 'teacher': 'lucy', 'address':'z'},
+                        "time": '9:00-10:00',
+                    }
+                ],
+				"confirm": false,
+
+
+			}
+
+		})
+	},
+
+    '/api/getCommentList': (req,res) =>{
+		res.json({
+			"data":[
+                {
+                    "_id": "56131e0b7efe639f3fafda0e",
+                    "aid": "560a438f10f611091d0933c6",
+                    "content": "fhgfh",
+                    "userId": {
+                        "_id": "56131df47efe639f3fafda0d",
+                        "userName": "黑子",
+                    },
+                    "__v": 0,
+                    "updated": "2015-10-06T01:04:11.816Z",
+                    "created": "2015-10-06T01:04:11.816Z",
+                    "status": 1,
+                    "replys": [{
+                        "created": "2016-09-05T06:32:47.990Z",
+                        "userInfo": {
+                            "userName": "俊峰1",
+                            "id": "57c64921c5d959ab07294be4"
+                        },
+                        "content": "@黑子 这是什么东西",
+                        "_id": "57cd118f80bfe5ca142f4077"
+                    },{
+                        "created": "2016-09-05T06:32:47.990Z",
+                        "userInfo": {
+                            "userName": "俊峰1",
+                            "id": "57c64921c5d959ab07294be4"
+                        },
+                        "content": "@黑子 这是什么东西",
+                        "_id": "57cd118f80bfe5ca142f4072"
+					}
+                    ]
+                },
 				{
-					"id": 1,
-                    "monday": { 'course':'c1','students':['s1','s3'], 'teacher': null, 'address':'z'},
-                    "tuesday": null,
-                    "wednesday": null,
-                    "thursday": null,
-                    "friday": null,
-                    "saturday": null,
-                    "sunday": { 'course':'c2','students':['s2'], 'teacher': null, 'address':'z'},
-                    "time": '9.30-10.30',
-				},
-				{
-                    "id": 2,
-                    "monday": null,
-                    "tuesday": { 'course':'c1','students':null, 'teacher': 'tom','address':'z'},
-                    "wednesday": null,
-                    "thursday": null,
-                    "friday": null,
-                    "saturday": null,
-                    "sunday": { 'course':'c1','students':null, 'teacher': 'lucy', 'address':'z'},
-                    "time": '9.00-10.00',
-				}
+                    "_id": "56131e0b7efe639f3fafda0e",
+                    "aid": "560a438f10f611091d0933c6",
+                    "content": "fhgfh",
+                    "userId": {
+                        "_id": "56131df47efe639f3fafda0d",
+                        "userName": "黑子",
+                    },
+                    "__v": 0,
+                    "updated": "2015-10-06T01:04:11.816Z",
+                    "created": "2015-10-06T01:04:11.816Z",
+                    "status": 1,
+                    "replys": [{
+                        "created": "2016-09-05T06:32:47.990Z",
+                        "userInfo": {
+                            "userName": "俊峰1",
+                            "id": "57c64921c5d959ab07294be4"
+                        },
+                        "content": "@黑子 这是什么东西",
+                        "_id": "57cd118f80bfe5ca142f4077"
+                    },{
+                        "created": "2016-09-05T06:32:47.990Z",
+                        "userInfo": {
+                            "userName": "俊峰1",
+                            "id": "57c64921c5d959ab07294be4"
+                        },
+                        "content": "@黑子 这是什么东西",
+                        "_id": "57cd118f80bfe5ca142f4072"
+					}
+                    ]
+                },
+
 			]
 		})
 	}

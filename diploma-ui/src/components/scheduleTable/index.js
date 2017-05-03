@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Popconfirm } from 'antd';
 
 import MulSelEditableCell from './MulSelEditableCell';
-import InputEditableCell from './InputEditableCell';
+import TimeEditableCell from './timeEditableCell';
 
 
 export default class Schedule extends Component{
@@ -139,7 +139,7 @@ export default class Schedule extends Component{
                 // fixed: 'right',
                 width: 100,
                 render: (text, record, index)=>(
-                    <InputEditableCell
+                    <TimeEditableCell
                         value={text}
                         onChange={this.onCellChange(index, 'time')}/>
                 )
