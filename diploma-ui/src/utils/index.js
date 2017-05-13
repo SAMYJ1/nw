@@ -23,11 +23,11 @@ export function delCookie(name)//删除cookie
 
 export function parseCascaderFormValue(formValues){
     let cascaderValues = {};
-    for (let key in formValues) {
+    for (let key of formValues) {
       if(Array.isArray(formValues[key])){
         let codes = key.split('|');
         formValues[key].map(function(value,index){
-          cascaderValues[codes[index]] = value;;
+          cascaderValues[codes[index]] = value;
         });
       }
     }

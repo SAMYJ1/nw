@@ -20,29 +20,30 @@ export const PASSWORD_BACKEND_ERROR="USER.PASSWORD_BACKEND_ERROR";
 const initialState = {
     loading: false,
     id: undefined,
+    modalFlag: false,
     userCode: undefined,
     userName: undefined,
     loadingPasswordRibbon:false,
 };
 
-const onLoading = (state= inititalState, action)=>{
-    return {...state, loading: true};
+const onLoading = (state= initialState, action)=>{
+    return {...state, loading: true, modalFlag: false};
 };
 
-const onBackendError = (state=inititalState, action)=>{
+const onBackendError = (state=initialState, action)=>{
     return {...state, loading: false}
 };
 
-const onLoadSavedUser = (state =inititalState, action)=>{
+const onLoadSavedUser = (state =initialState, action)=>{
     return {...state}
 };
 
-const onLogout = (state=inititalState, action)=>{
+const onLogout = (state=initialState, action)=>{
     delCookie("JSESSIONID");
     return {...state, id: undefined, userCode:undefined, userName:undefined}
 };
 
-const onLoginSuc = (state= inititalState, action)=>{
+const onLoginSuc = (state= initialState, action)=>{
     let result = action.result;
     if(!result){
         notification.error({
@@ -50,7 +51,7 @@ const onLoginSuc = (state= inititalState, action)=>{
             description: "没有数据返回",
         });
     }
-    return {...state, loading: false, ...result, id: result.userId }
+    return {...state, loading: false, ...result, id: result.userId, modalFlag:true }
 };
 
 let onLoadingPassword = (state = initialState, action) =>{

@@ -1,6 +1,6 @@
 import React,{Component,PropTypes} from 'react'
 import {formatDate} from '../../../utils/formateDate';
-import { Row, Col, Input, Button, Icon} from 'antd';
+import { Row, Col, Input, Button, Icon, notification} from 'antd';
 import Reply from './reply';
 import style from './index.less';
 
@@ -13,6 +13,7 @@ export default class Comment extends Component{
             mention: '',
             replyComment: '',
             newComment: '',
+            commentId: undefined,
         }
 
     }
@@ -26,18 +27,22 @@ export default class Comment extends Component{
 
     componentDidUpdate(prevProps, prevState){
         if (!prevState.showReplyBox && this.state.showReplyBox ){
-            this.refs.reply.focus()
+            // this.refs.reply.focus()
         }
     }
 
-    showReply(userName){
-        console.log("click",userName)
+    showReply(userName, _id){
+        console.log("click",userName, _id)
         const { auth={userName:'myj'} } = this.props;
 
         if (true){
-            this.setState({showReplyBox: true, mention: userName, replyComment: '@'+ userName+ ' '})
+            this.setState({showReplyBox: true, mention: userName, replyComment: '@'+ userName+ ' ', commentId: _id})
         }else {
             console.log('请登录')
+            notification.warning({
+                message: 'Warning',
+                description: '您还没有登录!',
+            });
         }
 
 
@@ -49,7 +54,10 @@ export default class Comment extends Component{
 
         }else {
             //请登录
-
+            notification.warning({
+                message: 'Warning',
+                description: '您还没有登录!',
+            });
         }
     }
 
@@ -80,7 +88,7 @@ export default class Comment extends Component{
 
     render(){
         const {commentList, auth = true, } = this.props;
-        const { mention, showReplyBox, replyComment  } = this.state;
+        const { mention, showReplyBox, replyComment, commentId  } = this.state;
 
         return(
             <div>
@@ -142,16 +150,16 @@ export default class Comment extends Component{
                                     <div className={style.commentFooter}>
                                         <Row>
                                             <Col offset={22} span={2}>
-                                                <a onClick={ e=>this.showReply(comment.userId.userName)}>回复</a>
+                                                <a onClick={ e=>this.showReply(comment.userId.userName, comment._id)}>回复</a>
                                             </Col>
                                         </Row>
                                     </div>
                                 </div>
 
-                                <Reply replys={comment.replys} k={index} showReply={ ::this.showReply}/>
+                                <Reply replys={comment.replys} commentId={comment._id} k={index} showReply={ ::this.showReply}/>
 
                                 {
-                                    showReplyBox ?
+                                    showReplyBox && commentId === comment._id ?
                                     <div className={style.replyBox}>
                                         <Row>
                                             <Col span={12}>

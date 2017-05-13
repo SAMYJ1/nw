@@ -23,6 +23,9 @@ module.exports = {
                 {
                     "id": 6, "name": "交流", "url": '/base/exchange', "icon": 'user'
                 },
+                {
+                    "id": 7, "name": "课程分类信息", "url": '/base/courseInfo', "icon": 'user'
+                },
 
 			]
 		})
@@ -131,6 +134,23 @@ module.exports = {
 		})
 	},
 
+    '/api/getCourseDetail': (req, res) =>{
+	    res.json({
+            "data": {
+                "list": [
+                    {
+                        "id": 1, "courseType": '两年课程规划', "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                    },
+                    {
+                        "id": 2, "courseType": '一年课程规划', "col1": '1.学会50首曲目 2.掌握正确坐姿', "col2": '45分钟/课时'
+                    },
+                ],
+                "title": [{"dataIndex":"col1","title": '收获成果'},{"dataIndex":"col2","title": '1对1'}]
+            }
+
+        })
+    },
+
 	//个人课表
     '/api/getPersonalSchedule': (req, res)=>{
 		res.json({
@@ -202,8 +222,8 @@ module.exports = {
                     ]
                 },
 				{
-                    "_id": "56131e0b7efe639f3fafda0e",
-                    "aid": "560a438f10f611091d0933c6",
+                    "_id": "56131e0b7efe639f3fafda0f",
+                    "aid": "560a438f10f611091d0933cf",
                     "content": "fhgfh",
                     "userId": {
                         "_id": "56131df47efe639f3fafda0d",
@@ -235,8 +255,39 @@ module.exports = {
 
 			]
 		})
-	}
+	},
 
+    '/api/getCourseInfoList': (req, res)=>{
+	    res.json({
+            "data": [
+                {
+                    "courseName": '钢琴',
+                    "list": [
+                        {
+                            "id": 1, "courseType": '两年课程规划', "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                        },
+                        {
+                            "id": 2, "courseType": '一年课程规划', "col1": '1.学会50首曲目 2.掌握正确坐姿', "col2": '45分钟/课时'
+                        },
+                    ],
+                    "title": [{"dataIndex":"col1","title": '收获成果'},{"dataIndex":"col2","title": '1对1'}]
+                },
+                {
+                    "courseName": '吉他',
+                    "list": [
+                        {
+                            "id": 1, "courseType": '两年课程规划', "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                        },
+                        {
+                            "id": 2, "courseType": '三年课程规划', "col1": '1.学会50首曲目 2.掌握正确坐姿', "col2": '45分钟/课时'
+                        },
+                    ],
+                    "title": [{"dataIndex":"col1","title": '收获成果'},{"dataIndex":"col2","title": '1对1'}]
+                },
+
+            ]
+        })
+    }
 };
 
 

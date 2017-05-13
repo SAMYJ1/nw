@@ -28,6 +28,8 @@ export const URL_DEL_ACCOUNT = HOST + './api/delAccount';
 export const URL_GET_COURSE_LIST = HOST + '/api/getCourseList';
 export const URL_MODIFY_COURSE = HOST + '/api/modifyCourse';
 export const URL_DELETE_COURSE = HOST + '/api/deleteCourse';
+export const URL_GET_COURSE_DETAIL = HOST + '/api/getCourseDetail';
+export const URU_MODIFY_COURSE_DETAIL = HOST + '/api/modifyCourseDetail';
 
 //个人课程表
 export const URL_GET_PER_SCHEDULE = HOST + '/api/getPersonalSchedule';
@@ -37,3 +39,7 @@ export const URL_CONFIRM_SCHEDULE = HOST + '/api/confirmSchedule';
 export const URL_GET_COMMENT_LIST = HOST + '/api/getCommentList';
 export const URL_ADD_COMMENT = HOST + '/api/addComment';
 export const URL_ADD_REPLY = HOST + '/api/addReply';
+
+
+//课程信息展示列表
+export const URL_GET_COURSE_INFO_LIST = HOST + '/api/getCourseInfoList';

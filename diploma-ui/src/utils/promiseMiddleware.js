@@ -16,13 +16,13 @@ export default function promiseMiddleware( objMethods ) {
         next({ ...rest, type: REQUEST });
         return promise.then(
             function(result){
-                if(!result||!result.data){
+                if(!result ){
                     let error = {message:'No data returns.'};
                     return next({ ...rest, error, type: ERROR })
                 }
-                if(result.errorMsg){
+                if(result.status === 'error'){
 
-                    let errorMsg = result.errorMsg;
+                    let errorMsg = result.message;
 
                     notification.error({
                         message: 'Error',
@@ -40,16 +40,16 @@ export default function promiseMiddleware( objMethods ) {
                     ERROR = isLoginOut ? LOGIN_OUT : ERROR;
 
                     return next({ ...rest, result, error, type: ERROR })
-                }else if(result.warningMsg){
+                }else if(result.status === 'warning'){
                     notification.warning({
                         message: 'Warning',
-                        description: result.warningMsg,
+                        description: result.message,
                     });
                     return next({ ...rest, result, type: SUCCESS })
-                }else if(result.feedbackMsg){
+                }else if(result.status === 'success' && result.data === null){
                     notification.success({
                         message: 'Success',
-                        description: result.feedbackMsg,
+                        description: result.message,
                     });
                     return next({ ...rest, result, type: SUCCESS })
                 }

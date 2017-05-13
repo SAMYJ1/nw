@@ -4,9 +4,11 @@ import {connect} from 'react-redux';
 import styles from  './index.less';
 import { Icon, Modal, Spin, Form, Input} from 'antd';
 import HeadMenu from './HeadMenu';
+import Login from '../Login/index';
 import TabContent from './TabContent';
 import { getMenu,addTab } from '../../reducers/config';
 import { logout, sendPassword, } from '../../reducers/user';
+
 
 const FormItem = Form.Item;
 
@@ -22,6 +24,7 @@ class App extends React.Component {
 
         this.state = {
             showPasswordModal: false,
+            showLoginModal: false
         };
 
         /*const user = this.props.user;
@@ -95,12 +98,21 @@ class App extends React.Component {
     doLogout(){
         this.props.logout();
     }
+    onClickLogin(){
+        this.setState({showLoginModal: true})
+    }
+    onHandleLogin(){
+        this.setState({showLoginModal: false})
+    }
+    closeLoginModal(){
+        this.setState({showLoginModal: false})
+    }
 
     render() {
 
-        const { company='myj', userName='myj', loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
+        const { company='myj', userName, loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
 
-        const { showPasswordModal } = this.state;
+        const { showPasswordModal, showLoginModal } = this.state;
 
         const { getFieldDecorator } = this.props.form;
 
@@ -133,12 +145,23 @@ class App extends React.Component {
             <div className={styles.normal}>
                 <div className={styles.head}>
                     <h1>CANMUSIC</h1>
-                    <ul className={styles.sidebarUser}>
-                        <li><a href="javascript:;"><Icon type="user" className={styles.headIcon}/> {company}</a> </li>
-                        <li><a href="javascript:;">{userName}</a></li>
-                        <li><a href="javascript:;" onClick={ this.showResetPasswordModal.bind(this)}><Icon type="unlock" className={styles.headIcon} />修改密码</a></li>
-                        <li><a href="javascript:;" onClick={this.doLogout.bind(this)}><Icon type="logout" className={styles.headIcon}/>退  出</a></li>
-                    </ul>
+                    {
+                        userName ?
+                            <ul className={styles.sidebarUser}>
+                                <li><a href="javascript:;"><Icon type="user" className={styles.headIcon}/> {company}</a> </li>
+                                <li><a href="javascript:;">{userName}</a></li>
+                                <li><a href="javascript:;" onClick={ this.showResetPasswordModal.bind(this)}><Icon type="unlock" className={styles.headIcon} />修改密码</a></li>
+                                <li><a href="javascript:;" onClick={this.doLogout.bind(this)}><Icon type="logout" className={styles.headIcon}/>退  出</a></li>
+                            </ul>
+                            :
+                            <ul className={styles.sidebarUser}>
+                                <li><p>亲爱的游客，请登录</p></li>
+                                <li><a onClick={ ::this.onClickLogin }><Icon type="login" className={styles.headIcon}/>登录</a></li>
+                            </ul>
+
+
+                    }
+
                 </div>
 
                 <div>
@@ -181,6 +204,14 @@ class App extends React.Component {
                         </Form>
                     </Spin>
                 </Modal>
+                <Modal
+                    title='登录'
+                    visible={showLoginModal}
+                    onCancel={ ::this.closeLoginModal }
+                    footer={null}
+                >
+                    <Login handleLogin={ ::this.onHandleLogin}/>
+                </Modal>
 
                 <div className={styles.foot}>
 
@@ -212,5 +243,5 @@ export default connect(state => {
             loadingPasswordRibbon: state.reducers.user.loadingPasswordRibbon
         }
     },
-    (dispatch) => (bindActionCreators({logout, sendPassword, getMenu, addTab}, dispatch))
+    (dispatch) => (bindActionCreators({ logout, sendPassword, getMenu, addTab}, dispatch))
 )(App);

@@ -20,17 +20,25 @@ export default class InputEditableCell extends Component {
     edit = () => {
         this.setState({ editable: true });
     };
+    deleteItem = () => {
+        if (this.props.handleDelete){
+            this.props.handleDelete()
+        }
+    };
     render() {
         const { value, editable } = this.state;
+        const {showDeleteButton} = this.props;
         return (
             <div className={style.editableCell}>
                 {
                     editable ?
                         <div className={style.editableCellInputWrapper}>
                             <Input
+                                {...this.props}
+                                style={{width: '100%'}}
                                 value={value}
                                 onChange={this.handleChange}
-                                onPressEnter={this.check}
+
                             />
                             <Icon
                                 type="check"
@@ -40,12 +48,25 @@ export default class InputEditableCell extends Component {
                         </div>
                         :
                         <div className={style.editableCellTextWrapper}>
-                            {value || ' '}
+                            {<pre>{value}</pre> || ' '}
                             <Icon
                                 type="edit"
                                 className={style.editableCellIcon}
                                 onClick={this.edit}
                             />
+                            {
+                                showDeleteButton ?
+                                    <Icon
+                                    type="delete"
+                                    style={{right: '20px'}}
+                                    className={style.editableCellIcon}
+                                    onClick={this.deleteItem}
+                                />
+                                    :
+                                    ''
+
+                            }
+
                         </div>
                 }
             </div>

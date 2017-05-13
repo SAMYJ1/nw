@@ -13,7 +13,7 @@ export default class Reply extends Component{
         showReply: PropTypes.func.isRequired
     };
     render(){
-        const {replys,k,showReply} = this.props
+        const {replys,k,showReply,commentId} = this.props;
         return(
             <div className={style.replyBody}>
                 {replys.map((reply,index)=>
@@ -30,7 +30,7 @@ export default class Reply extends Component{
                                     <span>{formatDate(reply.created)}</span>
                                 </Col>
                                 <Col offset={16} span={2}>
-                                    <a onClick={e=>showReply(reply.userInfo.userName)}>回复</a>
+                                    <a onClick={e=>showReply(reply.userInfo.userName, commentId)}>回复</a>
                                 </Col>
                             </Row>
                         </div>

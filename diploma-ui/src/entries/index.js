@@ -10,7 +10,6 @@ import reducers from '../reducers/index';
 import SagaManager from '../sagas/SagaManager';
 import './index.less';
 import 'antd/dist/antd.css';
-import "./react-data-grid.css";
 
 import {getCookie} from '../utils';
 import promiseMiddleware  from '../utils/promiseMiddleware';

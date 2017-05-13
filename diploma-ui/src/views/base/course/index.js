@@ -3,10 +3,11 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Form, Row, Col, Spin, Select, Input, Table, Modal, Radio} from 'antd';
 import {ButtonGroup} from '../../../components/ButtonGroup';
-import {getCourseList, modifyCourse, deleteCourse} from '../../../reducers/course';
+import {getCourseList, modifyCourse, deleteCourse, getCourseDetail, modifyCourseDetail } from '../../../reducers/course';
 import { getTeacherList } from '../../../reducers/teacher';
 import {buttons, courseColumns} from './course.config';
 import CourseDetail from './courseDetail';
+
 
 
 const FormItem = Form.Item;
@@ -37,7 +38,7 @@ class Course extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.reload && nextProps.reload) {
+        if (!this.props.course.reload && nextProps.course.reload) {
             this.onSearch();
         }
     }
@@ -136,6 +137,7 @@ class Course extends Component {
     onSetDetail(){
         let { selectedRowKeys, selectedRows } = this.state;
 
+        this.props.getCourseDetail({id: selectedRowKeys[0]});
         this.setState({showDetailModal: true})
     }
 
@@ -164,17 +166,23 @@ class Course extends Component {
 
     //基础信息
     onSaveDetail(){
+        let data = this.refs.courseDetail.backupData();
+        console.log(data);
 
+        this.props.modifyCourseDetail(data);
+        this.refs.courseDetail.resetData();
+        this.setState({showDetailModal: false})
     }
     onCancelDetail(){
 
+        this.setState({showDetailModal: false})
     }
 
 
     render() {
         const {getFieldDecorator} = this.props.form;
         const {selectedRows, selectedRowKeys, showCourseModal, showDetailModal } = this.state;
-        const { course, teacherList} = this.props;
+        const { course, teacherList,} = this.props;
 
         const columns = this.columns;
         const buttons = this.getButtonStatus();
@@ -303,7 +311,10 @@ class Course extends Component {
                        onOk={ ::this.onSaveDetail }
                        onCancel={ ::this.onCancelDetail }
                 >
-                    <CourseDetail/>
+                    <CourseDetail
+                        ref="courseDetail"
+                        dataSource={course.courseDetailData.list || []}
+                        tableTitle={course.courseDetailData.title || []} />
                 </Modal>
 
                 <Spin spinning={course.loading} tip="正在读取数据...">
@@ -328,4 +339,4 @@ export default connect((state) => {
         course: {...state.reducers.course},
         teacherList: state.reducers.teacher.teacherList,
     }
-}, dispatch => bindActionCreators({getCourseList, modifyCourse, deleteCourse, getTeacherList}, dispatch))(CourseForm)
+}, dispatch => bindActionCreators({getCourseList, modifyCourse, deleteCourse, getTeacherList,getCourseDetail, modifyCourseDetail }, dispatch))(CourseForm)

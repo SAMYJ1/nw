@@ -1,9 +1,9 @@
 
-const columns = [
+const detailColumns = [
     {
         title: '课程类别',
         dataIndex: 'courseType'
     }
 ];
 
-export { columns }
+export { detailColumns }
