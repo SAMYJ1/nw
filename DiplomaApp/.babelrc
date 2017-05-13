@@ -1,0 +1,4 @@
+{
+  "presets": ["react-native", "es2015", "stage-3"],
+  "plugins": [["import", { "libraryName": "antd-mobile" }]]
+}
