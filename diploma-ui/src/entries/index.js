@@ -58,24 +58,24 @@ if (module.hot) {
 const history = syncHistoryWithStore(hashHistory, store);
 const validate = function (next, replace, callback) {
   const isLoggedIn = !!getCookie('JSESSIONID');
-  if (!isLoggedIn && next.location.pathname != '/login') {
+  if (!isLoggedIn && next.location.pathname !== '/login') {
     replace('/login')
   }
+  console.log('cookie!!!!!!!!!!!!!!', isLoggedIn, next)
   callback()
 };
+
 
 let render = () => {
   ReactDOM.render(
     <Provider store={store}>
       <Router history={hashHistory}>
-          <Route path="/"  breadcrumbName="Home" onEnter={validate}>
+          <Route path="/"  breadcrumbName="Home" onEnter={validate} >
             <IndexRedirect to="home" />
             {/*<Route path="login" component={Login}/>*/}
             <Route component={App}>
               <Route path="home"  component={Home}/>
-              <Route path="base/guide">
 
-              </Route>
               <Route path="*" component={Home}/>
             </Route>
           </Route>

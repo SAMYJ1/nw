@@ -3,8 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col, Table, Form, Select, Spin, Input, Radio, Modal } from 'antd'
 import { ButtonGroup } from '../../../components/ButtonGroup';
-import { getStudentList, delStudent, modifyStudent } from '../../../reducers/student';
-import { getStudentAndCourseList } from '../../../reducers/teacher';
+import { getStudentList, delStudent, modifyStudent, getAllCourse } from '../../../reducers/student';
 import { studentColumn, buttons } from './student.config';
 
 const FormItem = Form.Item;
@@ -24,14 +23,14 @@ class Student extends Component{
         this.buttons = JSON.parse(JSON.stringify(buttons));
     }
     componentWillMount(){
-        this.props.getStudentAndCourseList();
+        this.props.getAllCourse();
         this.getNewColumn();
     }
     componentDidMount(){
         this.onSearch();
     }
     componentWillReceiveProps(nextProps){
-        if (!this.props.reload && nextProps.reload){
+        if (!this.props.student.reload && nextProps.student.reload){
             this.onSearch();
         }
     }
@@ -89,7 +88,7 @@ class Student extends Component{
 
         this.columns.find((item) => {
 
-            if (item.dataIndex === 'studentName') {
+            if (item.dataIndex === 'account') {
 
                 item.render = (text, record) => {
                     return (<a onClick={this.onLookDetail.bind(this, record)}>{text}</a>);
@@ -98,19 +97,22 @@ class Student extends Component{
             if (item.dataIndex === 'sex'){
                 item.render = text => text === 0 ? '男' : '女';
             }
+            if (item.dataIndex === 'course'){
+                item.render = text => text.join('、')
+            }
 
         })
     }
 
     onSearch(){
-        let searchData = this.props.form.getFieldsValue(['name']);
+        let searchData = this.props.form.getFieldsValue(['account']);
         this.props.getStudentList(searchData);
     }
     onAdd(){
         this.setState({showStudentModal: true});
     }
     onReset(){
-        this.props.form.resetFields(['name']);
+        this.props.form.resetFields(['account']);
     }
     onDelete(){
         let { selectedRowKeys } = this.state;
@@ -143,8 +145,7 @@ class Student extends Component{
     render(){
         const { getFieldDecorator } = this.props.form;
         const { showStudentModal, selectedRowKeys, } = this.state;
-        const { loading, studentList } = this.props.student;
-        const courseList = this.props.courseList;
+        const { loading, studentList, courseList } = this.props.student;
 
         const columns = this.columns;
         const buttons = this.getButtonStatus();
@@ -190,7 +191,7 @@ class Student extends Component{
                                 labelCol={{span: 4}}
                                 wrapperCol={{span: 16}}
                             >
-                                {getFieldDecorator('name', {
+                                {getFieldDecorator('account', {
                                     initialValue: ''
                                 })(
                                     <Input/>
@@ -219,7 +220,7 @@ class Student extends Component{
                     <Row>
                         <Col span={12}>
                             <FormItem label="姓名" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('student.studentName',{
+                                {getFieldDecorator('student.account',{
                                     rules: [{ required: true, message: '请输入姓名' }],
                                 })(
                                     <Input/>
@@ -227,9 +228,9 @@ class Student extends Component{
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label="学号" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('student.studentCode',{
-                                    rules: [{ required: true, message: '请输入学号' }],
+                            <FormItem label="学校" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                {getFieldDecorator('student.school',{
+                                    initialValue:undefined
                                 })(
                                     <Input/>
                                 )}
@@ -290,15 +291,7 @@ class Student extends Component{
                                 )}
                             </FormItem>
                         </Col>
-                        <Col span={12}>
-                            <FormItem label="学校" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('student.school',{
-                                    initialValue:undefined
-                                })(
-                                    <Input/>
-                                )}
-                            </FormItem>
-                        </Col>
+
                     </Row>
 
                     <Row>
@@ -346,7 +339,6 @@ const StudentInfo = Form.create()(Student);
 export default connect(state=>{
     return {
         student: {...state.reducers.student},
-        courseList: state.reducers.teacher.stuAndCourList.courseList
     }
-},dispatch=>(bindActionCreators({ getStudentList, delStudent, modifyStudent, getStudentAndCourseList },dispatch))
+},dispatch=>(bindActionCreators({ getStudentList, delStudent, modifyStudent, getAllCourse },dispatch))
 )(StudentInfo);

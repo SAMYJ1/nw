@@ -19,17 +19,30 @@ export default class MulSelEditableCell extends Component{
     }
     
     componentDidMount(){
+        if (this.props.value){
+
+            let { students, course, address } = this.props.value;
+            this.setState({ students, course, address})
+        }
         if (this.props.record){
             let {courseList, studentList } = this.props.record;
-            let { students, course, address } = this.props.value;
-            this.setState({courseList,studentList, students, course, address})
+            this.setState({courseList, studentList})
         }
+
     }
     componentWillReceiveProps(nextProps){
 
         if (this.props.value !== nextProps.value){
             let { students, course, address } = nextProps.value;
             this.setState({students, course, address});
+        }
+        if (this.props.record.courseList !== nextProps.record.courseList ){
+            let {courseList } = nextProps.record;
+            this.setState({courseList,})
+        }
+        if (this.props.record.studentList !== nextProps.record.studentList){
+            let {studentList} = nextProps.record;
+            this.setState({studentList})
         }
 
     }
@@ -40,7 +53,8 @@ export default class MulSelEditableCell extends Component{
         this.setState({ students:value })
     }
     onCourseChange(value){
-        this.setState({ course:value })
+        console.log(value)
+        this.setState({ course:value === undefined ? '': value })
     }
     onAddressChange(e){
         let address = e.target.value;
@@ -58,7 +72,6 @@ export default class MulSelEditableCell extends Component{
     edit(){
         this.setState({editable: true})
     }
-
 
     render(){
         let { editable, address, course, students, studentList, courseList } = this.state;
@@ -80,9 +93,10 @@ export default class MulSelEditableCell extends Component{
                             <div>
                                 <label>课程:</label>
                                 <Select
+                                    allowClear
                                     defaultValue={course}
                                     style={{ width: '100%' }}
-                                    onSelect={ ::this.onCourseChange}
+                                    onChange={ ::this.onCourseChange }
                                 >
                                     {courseChildren}
                                 </Select>

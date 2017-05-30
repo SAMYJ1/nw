@@ -9,7 +9,6 @@ export default class CourseInfoDetail extends Component{
         this.state = {
             columns: JSON.parse(JSON.stringify(detailColumns)),
             dataSource: [],
-            header: [],
         };
 
     }
@@ -39,17 +38,18 @@ export default class CourseInfoDetail extends Component{
 
 
     getInitColumn(column){
+        let backColumn = JSON.parse(JSON.stringify(column));
+        let {columns} = this.state;
 
-        let columns = [...this.state.columns, ...column];
+
+        for (let item of backColumn){
+            let idx = columns.findIndex(i => i.dataIndex === item.dataIndex);
+            if (idx === -1){
+                columns.push(item)
+            }
+        }
 
         this.getNewColumn(columns);
-        let newColumn = JSON.parse(JSON.stringify(column));
-        newColumn.forEach(item=>{
-            if (item.render){
-                delete item.render
-            }
-        });
-        this.setState({header: newColumn })
 
     }
 

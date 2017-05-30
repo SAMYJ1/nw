@@ -1,5 +1,6 @@
 import React , {Component,PropTypes} from 'react';
 import { Spin, Row, Col, Table, Button, Input, Icon} from 'antd';
+import {v1 as uuidV1} from 'uuid';
 import { detailColumns } from './courseDetail.config';
 import InputEditableCell from '../../../components/scheduleTable/inputEditableCell';
 import style from './index.less';
@@ -23,7 +24,8 @@ export default class CourseDetail extends Component{
     componentWillMount(){
         this.getInitColumn(this.props.tableTitle);
 
-        this.setState({dataSource: this.props.dataSource})
+        let dataSource = this.props.dataSource.length === 0 ? [{id: uuidV1(),courseType:''}]: this.props.dataSource;
+        this.setState({dataSource})
     }
     componentDidUpdate(prevProps, prevState){
         if (this.state.columns.length !== prevState.columns.length){
@@ -33,7 +35,8 @@ export default class CourseDetail extends Component{
     }
     componentWillReceiveProps(nextProps){
         if (this.props.dataSource !== nextProps.dataSource){
-            this.setState({dataSource: nextProps.dataSource})
+            let dataSource = nextProps.dataSource.length === 0 ? [{id: uuidV1(),courseType:''}]: nextProps.dataSource;
+            this.setState({dataSource})
         }
         if (this.props.tableTitle !== nextProps.tableTitle){
             this.getInitColumn(nextProps.tableTitle);
@@ -42,19 +45,39 @@ export default class CourseDetail extends Component{
 
 
     getInitColumn(column){
+        let backColumn = JSON.parse(JSON.stringify(column))
+        let {columns} = this.state;
 
 
-        let columns = [...this.state.columns, ...column];
+
+        for (let item of backColumn){
+            let idx = columns.findIndex(i => i.dataIndex === item.dataIndex);
+            if (idx === -1){
+                columns.push(item)
+            }
+        }
 
         this.getNewColumn(columns);
-        let newColumn = JSON.parse(JSON.stringify(column));
-        newColumn.forEach(item=>{
+        this.getHeader(columns)
+
+    }
+    getHeader(columns){
+        let newColumn = JSON.parse(JSON.stringify(columns));
+        let idx = newColumn.findIndex(item=>item.dataIndex === 'courseType');
+        newColumn.splice(idx,1);
+        newColumn.forEach((item, index)=>{
             if (item.render){
                 delete item.render
             }
+            if (typeof item.title === 'object'){
+                console.log('11111',item.title, typeof item.title === 'object')
+                let title = item.title.props.value;
+                delete item.title;
+                item.title = title
+            }
         });
-        this.setState({header: newColumn })
-
+        this.setState({header: newColumn})
+        console.log('header : ',newColumn)
     }
 
     getNewColumn(columns = this.state.columns) {
@@ -65,7 +88,12 @@ export default class CourseDetail extends Component{
                 item.render = (text, record, index) => {
                     return (
                         <div className={style.editableCell}>
-                            <Icon type="delete" className={style.editableCellIcon} onClick={ this.onDeleteRow.bind(this, index) }/>
+                            {
+                                this.state.dataSource.length>1 ?
+                                    <Icon type="delete" className={style.editableCellIcon} onClick={ this.onDeleteRow.bind(this, index) }/>
+                                    :
+                                    ''
+                            }
                             <InputEditableCell value={text} onChange={ this.onCellChange(index, item.dataIndex) }/>
                         </div>
                     )
@@ -76,7 +104,9 @@ export default class CourseDetail extends Component{
                         <InputEditableCell autosize={{ minRows: 2, }} type="textarea" value={text} onChange={ this.onCellChange(index, item.dataIndex) }/>
                     );
                 };
-                item.title = <InputEditableCell value={item.title} showDeleteButton={true} handleDelete={ this.deleteCol.bind(this, item.dataIndex)} onChange={this.onColCellChange(item.dataIndex)}/>
+                if (typeof item.title === 'string'){
+                    item.title = <InputEditableCell value={item.title} showDeleteButton={true} handleDelete={ this.deleteCol.bind(this, item.dataIndex)} onChange={this.onColCellChange(item.dataIndex)}/>
+                }
             }
         });
         this.setState({columns})
@@ -84,10 +114,10 @@ export default class CourseDetail extends Component{
 
     addRow(){
         let dataSource = JSON.parse(JSON.stringify(this.state.dataSource));
-        let id = new Date();
-        let data =dataSource[0];
+
+        let data =JSON.parse(JSON.stringify(dataSource[0]));
         delete data.id;
-        let newRowData = {id: id.toString()};
+        let newRowData = {id: uuidV1()};
         Object.keys(data).forEach(item=>{
             newRowData[item] = ''
         });
@@ -109,15 +139,20 @@ export default class CourseDetail extends Component{
             dataIndex: 'col' + rowIdx,
         };
         let newColumns = [...columns, columnData];
+        this.getHeader(newColumns);
         this.setState({columns: newColumns});
 
     }
     deleteCol(dataIdx){
         console.log(dataIdx);
-        let { columns } = this.state;
+        let { columns, dataSource } = this.state;
         let delIdx = columns.findIndex(item=>item.dataIndex === dataIdx);
         columns.splice(delIdx, 1);
-        this.setState(columns)
+        dataSource.forEach(item => {
+            delete item[dataIdx]
+        });
+        this.getHeader(columns);
+        this.setState({columns, dataSource })
     }
 
     onColCellChange(dataIdx){
@@ -142,8 +177,8 @@ export default class CourseDetail extends Component{
     }
 
     backupData(){
-        const { header, dataSource} = this.state;
-        return { header, dataSource }
+        const { header, dataSource, columns} = this.state;
+        return { header, dataSource , columns}
 
     }
     resetData(){
@@ -171,7 +206,7 @@ export default class CourseDetail extends Component{
                 </div>
                 <Table
                     className={style.courseDetailTable}
-                    rowKey={record => record.id}
+                    rowKey='id'
                     pagination={false}
                     bordered columns={columns}
                     dataSource={dataSource}

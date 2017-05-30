@@ -14,12 +14,11 @@ export default class Comment extends Component{
             replyComment: '',
             newComment: '',
             commentId: undefined,
-        }
-
+        };
+        this.account = localStorage.getItem('account');
     }
     static PropTypes = {
         commentList: PropTypes.array.isRequired,
-        auth: PropTypes.object.isRequired,
         submitComment: PropTypes.func.isRequired,
         submitReply: PropTypes.func.isRequired,
 
@@ -31,12 +30,11 @@ export default class Comment extends Component{
         }
     }
 
-    showReply(userName, _id){
-        console.log("click",userName, _id)
-        const { auth={userName:'myj'} } = this.props;
+    showReply(userName, id){
+        console.log("click",userName, id)
 
-        if (true){
-            this.setState({showReplyBox: true, mention: userName, replyComment: '@'+ userName+ ' ', commentId: _id})
+        if (this.account ){
+            this.setState({showReplyBox: true, mention: userName, replyComment: '@'+ userName+ ' ', commentId: id})
         }else {
             console.log('请登录')
             notification.warning({
@@ -49,8 +47,8 @@ export default class Comment extends Component{
     }
 
     goComment(){
-        const { auth={userName:'myj'} } = this.props;
-        if (auth.userName){
+
+        if (this.account ){
 
         }else {
             //请登录
@@ -87,7 +85,7 @@ export default class Comment extends Component{
 
 
     render(){
-        const {commentList, auth = true, } = this.props;
+        const {commentList, } = this.props;
         const { mention, showReplyBox, replyComment, commentId  } = this.state;
 
         return(
@@ -104,7 +102,7 @@ export default class Comment extends Component{
                     </Row>
                 </div>
                 {
-                    auth ?
+                    this.account ?
                         <div className={style.commentBox}>
 
                             <Row>
@@ -133,7 +131,7 @@ export default class Comment extends Component{
                                     <div className={style.commentHeader}>
                                         <Row>
                                             <Col span={6}>
-                                                <a>{comment.userId.userName}</a>
+                                                <a>{comment.user.userName}</a>
                                             </Col>
                                         </Row>
                                         <Row>
@@ -150,16 +148,16 @@ export default class Comment extends Component{
                                     <div className={style.commentFooter}>
                                         <Row>
                                             <Col offset={22} span={2}>
-                                                <a onClick={ e=>this.showReply(comment.userId.userName, comment._id)}>回复</a>
+                                                <a onClick={ e=>this.showReply(comment.user.userName, comment.id)}>回复</a>
                                             </Col>
                                         </Row>
                                     </div>
                                 </div>
 
-                                <Reply replys={comment.replys} commentId={comment._id} k={index} showReply={ ::this.showReply}/>
+                                <Reply replys={comment.replys || []} commentId={comment.id} k={index} showReply={ ::this.showReply}/>
 
                                 {
-                                    showReplyBox && commentId === comment._id ?
+                                    showReplyBox && commentId === comment.id ?
                                     <div className={style.replyBox}>
                                         <Row>
                                             <Col span={12}>
@@ -168,7 +166,7 @@ export default class Comment extends Component{
                                         </Row>
                                         <Row className={style.buttonWrap}>
                                             <Col offset={2} span={4}>
-                                                <Button onClick={e=>this.handleSubmitReply(comment._id)}>提交</Button>
+                                                <Button onClick={e=>this.handleSubmitReply(comment.id)}>提交</Button>
                                             </Col>
                                             <Col span={4}>
                                                 <Button onClick={::this.cancelSubmitReply}>取消</Button>

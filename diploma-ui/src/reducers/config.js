@@ -96,7 +96,7 @@ export default createReducer(initialState,actionHandlers);
 export function getMenu(action) {
     return {
         types: [LOADING, ON_MENU_SUC, BACKEND_ERR],
-        promise: request.post(URL_GET_MENU).send({...action}),
+        promise: request.get(URL_GET_MENU).send({...action}),
         action
     }
 }

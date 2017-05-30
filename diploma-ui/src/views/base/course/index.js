@@ -30,7 +30,7 @@ class Course extends Component {
 
     componentWillMount() {
         this.getNewColumn();
-        this.props.getTeacherList();
+        this.props.getTeacherList({account: ''});
     }
 
     componentDidMount() {
@@ -115,8 +115,8 @@ class Course extends Component {
     }
 
     onSearch() {
-        let searchData = this.props.form.getFieldsValue(['search.courseName']);
-        this.props.getCourseList(searchData);
+        let searchData = this.props.form.getFieldValue('search.courseName');
+        this.props.getCourseList({courseName: searchData});
     }
 
     onAdd() {
@@ -166,29 +166,65 @@ class Course extends Component {
 
     //基础信息
     onSaveDetail(){
+        const {selectedRowKeys} = this.state;
         let data = this.refs.courseDetail.backupData();
-        console.log(data);
+        console.log('backupdata from courseDetail',data);
 
-        this.props.modifyCourseDetail(data);
-        this.refs.courseDetail.resetData();
-        this.setState({showDetailModal: false})
+        let newData = this.formatSendData({list:data.dataSource, title:data.header});
+        this.props.modifyCourseDetail({...newData,id: selectedRowKeys[0]});
+
+        this.setState({showDetailModal: false, selectedRowKeys: [], selectedRows: []})
     }
     onCancelDetail(){
-
         this.setState({showDetailModal: false})
     }
 
+    afterClose(){
+        this.refs.courseDetail.resetData();
+    }
+
+    formatSendData(courseData){
+        const {list, title} = courseData;
+        let newList = list.map(item => {
+            let {courseType,id} = item;
+            delete item.courseType;
+            delete item.id;
+            return {customizedCourses:{...item},id, courseType}
+        });
+        let newTitle = {};
+        title.map(item=>{
+            newTitle = {...newTitle, ...{[item.dataIndex]:item.title}, }
+        });
+        return {...courseData, list: newList, title: newTitle }
+    }
+
+    formatCourseDetailData(courseData){
+        if (!courseData) return;
+        let {list,title} = courseData;
+        let newList = list && list.map(listItem =>{
+            delete listItem.id;
+            return {courseType:listItem.courseType, ...listItem.customizedCourses};
+        });
+        let newTitle = title && Object.entries(title).map(item =>{
+            return {dataIndex: item[0], title: item[1]}
+
+        });
+
+        return {...courseData,list: newList, title: newTitle}
+    }
 
     render() {
         const {getFieldDecorator} = this.props.form;
         const {selectedRows, selectedRowKeys, showCourseModal, showDetailModal } = this.state;
         const { course, teacherList,} = this.props;
 
+        const courseDetailData = this.formatCourseDetailData(course.courseDetailData);
+
         const columns = this.columns;
         const buttons = this.getButtonStatus();
 
         let teacherOptions = teacherList && teacherList.length > 0 ? teacherList.map(item => {
-            return <Option key={item.teacherName}>{item.teacherName}</Option>
+            return <Option key={item.account}>{item.account}</Option>
         }) : [];
 
 
@@ -310,11 +346,12 @@ class Course extends Component {
                        maskClosable={false}
                        onOk={ ::this.onSaveDetail }
                        onCancel={ ::this.onCancelDetail }
+                       afterClose={ ::this.afterClose}
                 >
                     <CourseDetail
                         ref="courseDetail"
-                        dataSource={course.courseDetailData.list || []}
-                        tableTitle={course.courseDetailData.title || []} />
+                        dataSource={courseDetailData.list || []}
+                        tableTitle={courseDetailData.title || []} />
                 </Modal>
 
                 <Spin spinning={course.loading} tip="正在读取数据...">

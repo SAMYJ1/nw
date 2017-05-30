@@ -20,7 +20,22 @@ class CourseInfo extends Component{
         this.props.getCourseInfoList()
     }
 
+    formatCourseDetailData(courseData){
+        if (!courseData) return;
+        console.log('unformated',courseData)
+        let {list,title} = courseData;
+        let newList = list && list.map(listItem =>{
+                delete listItem.id;
+                return {courseType:listItem.courseType, ...listItem.customizedCourses};
+            });
+        let newTitle = title && Object.entries(title).map(item =>{
+                return {dataIndex: item[0], title: item[1]}
 
+            });
+        console.log("formated from back",courseData);
+
+        return {...courseData,list: newList, title: newTitle}
+    }
 
     render(){
         const { loading, courseInfoList  } = this.props;
@@ -31,12 +46,13 @@ class CourseInfo extends Component{
                 <Tabs tabPosition="left" defaultActiveKey='0' className={style.content}>
                     {
                         courseInfoList.map((item, index)=>{
+                            let newData = this.formatCourseDetailData(item)
                             return (
                                 <TabPane tab={item.courseName} key={index}>
                                     <div className={style.courseTable}>
                                         <CourseInfoDetail
-                                            dataSource={item.list || []}
-                                            tableTitle={item.title || []}
+                                            dataSource={newData.list || []}
+                                            tableTitle={newData.title || []}
                                         />
                                     </div>
 

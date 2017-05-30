@@ -17,7 +17,11 @@ class Exchange extends Component{
     componentDidMount(){
         this.props.getCommentList()
     }
-
+    componentWillReceiveProps(nextProps){
+        if (!this.props.reload && nextProps.reload ){
+            this.props.getCommentList()
+        }
+    }
 
     handleSubmitComment(content){
 
@@ -28,7 +32,7 @@ class Exchange extends Component{
     handleSubmitReply(id, content){
 
         console.info("reply!!! ", content);
-        this.props.addReply({id, content})
+        this.props.addReply({commentId:id, content})
     }
 
 
@@ -57,9 +61,9 @@ class Exchange extends Component{
 export default connect(state=>{
     return {
         commentList: state.reducers.exchange.commentList,
+        reload: state.reducers.exchange.reload,
         auth: {
             userName: state.reducers.user.userName,
-
         }
     }
 },dispatch=>(bindActionCreators({ getCommentList, addComment, addReply }, dispatch)))(Exchange)

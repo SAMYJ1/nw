@@ -20,6 +20,11 @@ const buttons = [
         action: 'delete',
         icon: 'delete'
     },
+    {
+        label: '课表',
+        action: 'lookSchedule',
+        icon: 'setting'
+    }
 
 
 ];
@@ -27,19 +32,15 @@ const buttons = [
 const teacherColumn= [
     {
         title: '姓名',
-        dataIndex: 'teacherName',
+        dataIndex: 'account',
     },
-    {
-        title: '教师编号',
-        dataIndex: 'teacherCode',
-    },
+    // {
+    //     title: '教师编号',
+    //     dataIndex: 'teacherCode',
+    // },
     {
         title: '联系方式',
         dataIndex: 'tel'
-    },
-    {
-        title: '所授课程',
-        dataIndex: 'course',
     },
     {
         title: '类型',

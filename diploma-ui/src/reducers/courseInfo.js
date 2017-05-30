@@ -35,7 +35,7 @@ export default createReducer(initialState, actionHandlers);
 export function getCourseInfoList(action) {
     return {
         types: [GET_COURSE_INFO_LIST_LOAD,GET_COURSE_INFO_LIST_SUC,GET_COURSE_INFO_LIST_ERR],
-        promise: request.post(URL_GET_COURSE_INFO_LIST).send(action),
+        promise: request.get(URL_GET_COURSE_INFO_LIST).send(action),
         action
     }
 }

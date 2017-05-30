@@ -1,8 +1,13 @@
-import React, { Component} from 'react';
+import React, { Component, PropTypes} from 'react';
 import {  Input, Icon, } from 'antd';
 import style from './editable.less';
 
 export default class InputEditableCell extends Component {
+    static PropTypes = {
+        showDeleteButton: PropTypes.bool,
+        handleDelete: PropTypes.func,
+    };
+
     state = {
         value: this.props.value,
         editable: false,

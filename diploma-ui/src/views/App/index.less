@@ -22,6 +22,8 @@
   display:flex;
 
   li {
+    position: relative;
+
     a,p {
       display: block;
       height: 50px;
@@ -111,4 +113,34 @@ a.downloadLink{
 
 a.downloadLink:hover {
   color: #ff9900;
+}
+
+
+.messageItemBox{
+  position: relative;
+  &:after{
+    display: table;
+    content: '';
+    clear: both;
+  }
+
+  p{
+    width: 90%;
+    float: left;
+    margin-left: 10px;
+    line-height: 22px;
+  }
+
+  .messageDeleteIcon{
+
+    margin-top: -9px;
+    top: 50%;
+    position: absolute;
+    left: 96%;
+  }
+}
+.badge{
+  position: absolute;
+  top: 12px;
+  right: 15px;
 }

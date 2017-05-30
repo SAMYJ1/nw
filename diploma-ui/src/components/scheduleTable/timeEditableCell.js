@@ -56,8 +56,9 @@ export default class TimeEditableCell extends Component{
     render(){
         let { editable, value } = this.state;
 
-        let startTime = value.split('-')[0];
-        let endTime = value.split('-')[1];
+        let startTime = value ? value.split('-')[0]: null;
+        let endTime = value ? value.split('-')[1]: null;
+        console.log('2222222222222222222222222',moment(null,this.format))
 
 
         return (
@@ -66,8 +67,8 @@ export default class TimeEditableCell extends Component{
                     editable ?
                         <div className={style.editableCellInputWrapper}>
 
-                            <TimePicker format={this.format} value={moment(startTime, this.format)} onChange={::this.onStartTimeChange} />
-                            <TimePicker format={this.format} value={moment(endTime, this.format)} onChange={::this.onEndTimeChange} />
+                            <TimePicker format={this.format} value={startTime?moment(startTime, this.format):null} onChange={::this.onStartTimeChange} />
+                            <TimePicker format={this.format} value={endTime?moment(endTime, this.format):null} onChange={::this.onEndTimeChange} />
 
                             <Icon type="check" className={style.editableCellIconCheck} onClick={this.check.bind(this)}/>
                         </div>

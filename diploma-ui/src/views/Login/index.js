@@ -25,7 +25,7 @@ class Login extends React.Component {
 
     constructor (props) {
         super(props);
-        this.userCode = localStorage.getItem("userCode");
+        this.account = localStorage.getItem("account");
     }
 
     // componentWillMount(){
@@ -34,7 +34,7 @@ class Login extends React.Component {
     componentWillReceiveProps(nextProps) {
         const user = nextProps.user;
 
-        if (user.id) {
+        if (user.account) {
             this.context.router.replace('/home');
         }
         if (!this.props.user.modalFlag && user.modalFlag){
@@ -51,9 +51,9 @@ class Login extends React.Component {
 
     setCache() {
 
-        let {  userCode } = this;
+        let {  account } = this;
 
-        this.props.form.setFieldsValue({  userCode })
+        this.props.form.setFieldsValue({  account })
     }
 
     resetAll(){
@@ -65,7 +65,8 @@ class Login extends React.Component {
         const data = this.props.form.getFieldsValue();
         this.props.login(data);
         localStorage.clear();
-        localStorage.setItem("userCode",data.userCode);
+        localStorage.setItem("account",data.account);
+        localStorage.setItem("character",data.character);
 
     }
 
@@ -85,8 +86,9 @@ class Login extends React.Component {
                             wrapperCol={{ span: 24 }}
                         >
                             {
-                                getFieldDecorator('userCode',{
-                                    initialValue: ""
+                                getFieldDecorator('account',{
+                                    initialValue: "",
+                                    rules: [{required: true, message: '请输入账号'}],
                                 })(
                                     <Input className={styles.input}  prefix={<Icon type="user" />} placeholder='用户' />
                                 )
@@ -97,7 +99,9 @@ class Login extends React.Component {
                             wrapperCol={{ span: 24 }}
                         >
                             {
-                                getFieldDecorator('password')
+                                getFieldDecorator('password',{
+                                    rules: [{required: true, message: '请输入密码'}],
+                                })
                                 (
                                     <Input className={styles.input} type='password' prefix={<Icon type="lock" />} placeholder='密码' />
                                 )
@@ -108,12 +112,15 @@ class Login extends React.Component {
                             wrapperCol={{ span: 24 }}
                         >
                             {
-                                getFieldDecorator('roleName',{initialValue: 0})
+                                getFieldDecorator('character',{
+                                    initialValue: 'student',
+                                    rules: [{required: true, message: '请选择'}],
+                                })
                                 (
                                     <RadioGroup>
-                                        <Radio key="1" value={0}>学生</Radio>
-                                        <Radio key="2" value={1}>教师</Radio>
-                                        <Radio key="3" value={2}>管理员</Radio>
+                                        <Radio key="1" value={'student'}>学生</Radio>
+                                        <Radio key="2" value={'teacher'}>教师</Radio>
+                                        <Radio key="3" value={'admin'}>管理员</Radio>
                                     </RadioGroup>
                                 )
                             }
@@ -121,7 +128,7 @@ class Login extends React.Component {
 
                         <Row>
                             <Col span={6} offset={3}>
-                                <Button  className={styles.bt} style={{}} loading={this.props.user.loadingLogin} htmlType='submit'>登录</Button>
+                                <Button  className={styles.bt} style={{}} loading={this.props.user.loading} htmlType='submit'>登录</Button>
                             </Col>
                             <Col span={6} offset={3}>
                                 <Button className={styles.bt} onClick={this.resetAll.bind(this)}>重置</Button>

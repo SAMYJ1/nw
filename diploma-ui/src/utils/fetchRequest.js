@@ -2,14 +2,10 @@
 class Request{
     constructor(){
     }
-    get(url,action){
+    get(url){
         this.url = url;
         this.method = 'get';
-        if (action){
-            return this.send(action)
-        }else {
-            return this.send()
-        }
+        return this
 
     }
     post(url){
@@ -21,13 +17,18 @@ class Request{
     send(action){
         if (this.method === 'post'){
             // let formData = new FormData();
-            // formData.append('json',JSON.stringify(action));
+            // formData.append('text',JSON.stringify(action));
+            let headers = new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            });
+
 
             return (async()=>{
                 try {
                     let response = await fetch(this.url,{
                         method: this.method,
                         body: JSON.stringify(action),
+                        headers: headers,
                         catch: 'default',
                         credentials: 'include',
                     });

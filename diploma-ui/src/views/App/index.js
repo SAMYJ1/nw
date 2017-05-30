@@ -2,14 +2,15 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import styles from  './index.less';
-import { Icon, Modal, Spin, Form, Input} from 'antd';
+import { Icon, Modal, Spin, Form, Input, Badge, Collapse} from 'antd';
 import HeadMenu from './HeadMenu';
 import Login from '../Login/index';
 import TabContent from './TabContent';
-import { getMenu,addTab } from '../../reducers/config';
-import { logout, sendPassword, } from '../../reducers/user';
+import { getMenu,addTab, removeAllTabs } from '../../reducers/config';
+import { logout, sendPassword, getAdminMessage, deleteMessage } from '../../reducers/user';
 
 
+const Panel = Collapse.Panel;
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -24,7 +25,10 @@ class App extends React.Component {
 
         this.state = {
             showPasswordModal: false,
-            showLoginModal: false
+            showLoginModal: false,
+            showMessageModal: false,
+            messageList: [],
+            delList: []
         };
 
         /*const user = this.props.user;
@@ -34,8 +38,32 @@ class App extends React.Component {
     }
 
     componentWillMount() {
-        this.props.getMenu();
+        this.props.getMenu({character: 'visitor'});
+        localStorage.clear();
+        if (this.props.user.messageList){
+            this.setState({messageList: this.props.user.messageList})
+        }
     }
+    componentWillReceiveProps(nextProps){
+        if (!this.props.user.account && nextProps.user.account){
+            this.props.getMenu({ character: nextProps.user.character});
+            if (localStorage.getItem('character') === 'admin'){
+                this.props.getAdminMessage()
+            }
+        }
+        if (this.props.user.messageList !== nextProps.user.messageList){
+            this.setState({messageList: nextProps.user.messageList})
+        }
+    }
+    componentWillUpdate(nextProps, nextState){
+        const {delList} = this.state;
+        if (this.state.showMessageModal && !nextState.showMessageModal && delList.length > 0){
+            console.log('delete success!!!!!!!!!!!!!!!!!')
+            this.props.deleteMessage(delList)
+        }
+
+    }
+
 
     onMenuClick(e){
         const {menuData} = this.props;
@@ -97,6 +125,9 @@ class App extends React.Component {
 
     doLogout(){
         this.props.logout();
+        this.props.getMenu({character: 'visitor'});
+        localStorage.clear();
+        this.props.removeAllTabs();
     }
     onClickLogin(){
         this.setState({showLoginModal: true})
@@ -108,11 +139,25 @@ class App extends React.Component {
         this.setState({showLoginModal: false})
     }
 
+    showMessage(){
+        this.setState({showMessageModal: true, delList: []})
+    }
+    closeMessageModal(){
+        this.setState({showMessageModal: false})
+    }
+    onDeleteMessage(id){
+        const {messageList, delList} = this.state;
+        let rmIdx = messageList.findIndex(item=>item.id === id);
+        messageList.splice(rmIdx, 1);
+        delList.push(id);
+        this.setState({messageList, delList})
+    }
+
     render() {
 
-        const { company='myj', userName, loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
+        const { user, loadingPasswordRibbon=false, menuData=[], activeTabKey=[] } = this.props;
 
-        const { showPasswordModal, showLoginModal } = this.state;
+        const { showPasswordModal, showLoginModal, showMessageModal, messageList } = this.state;
 
         const { getFieldDecorator } = this.props.form;
 
@@ -146,10 +191,19 @@ class App extends React.Component {
                 <div className={styles.head}>
                     <h1>CANMUSIC</h1>
                     {
-                        userName ?
+                        user.account ?
                             <ul className={styles.sidebarUser}>
-                                <li><a href="javascript:;"><Icon type="user" className={styles.headIcon}/> {company}</a> </li>
-                                <li><a href="javascript:;">{userName}</a></li>
+                                <li><a href="javascript:;"><Icon type="user" className={styles.headIcon}/> {user.account}</a> </li>
+                                {
+                                    localStorage.getItem('character') === 'admin' ?
+                                        <li>
+                                            <Badge className={styles.badge} dot={messageList.length > 0} />
+                                            <a href="javascript:;" onClick={::this.showMessage }>消息</a>
+                                        </li>
+                                        :
+                                        ''
+                                }
+
                                 <li><a href="javascript:;" onClick={ this.showResetPasswordModal.bind(this)}><Icon type="unlock" className={styles.headIcon} />修改密码</a></li>
                                 <li><a href="javascript:;" onClick={this.doLogout.bind(this)}><Icon type="logout" className={styles.headIcon}/>退  出</a></li>
                             </ul>
@@ -212,6 +266,32 @@ class App extends React.Component {
                 >
                     <Login handleLogin={ ::this.onHandleLogin}/>
                 </Modal>
+                <Modal
+                    title={'消息列表'}
+                    visible={showMessageModal}
+                    onCancel={ ::this.closeMessageModal }
+                    footer={null}
+                    style={{top: 53, right: 20}}
+                >
+                    <div>
+                        <Collapse accordion>
+                            {
+                                messageList.map((item,index)=>{
+
+                                    return (
+                                        <Panel header={`${item.account}(${item.character})`} key={item.id}>
+                                            <div className={styles.messageItemBox}>
+                                                <p>{item.message}</p>
+                                                <div className={styles.messageDeleteIcon}><Icon type="delete" onClick={ this.onDeleteMessage.bind(this, item.id) }/></div>
+                                            </div>
+                                        </Panel>
+                                    )
+                                })
+                            }
+
+                        </Collapse>
+                    </div>
+                </Modal>
 
                 <div className={styles.foot}>
 
@@ -237,11 +317,11 @@ App = Form.create()(App);
 export default connect(state => {
 
         return {
-            userName: state.reducers.user.userName,
+            user: state.reducers.user,
             menuData: state.reducers.config.menuData,
             activeTabKey: state.reducers.config.activeTabKey,
             loadingPasswordRibbon: state.reducers.user.loadingPasswordRibbon
         }
     },
-    (dispatch) => (bindActionCreators({ logout, sendPassword, getMenu, addTab}, dispatch))
+    (dispatch) => (bindActionCreators({ logout, sendPassword, getAdminMessage, deleteMessage, getMenu, addTab, removeAllTabs}, dispatch))
 )(App);

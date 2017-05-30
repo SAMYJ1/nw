@@ -1,8 +1,11 @@
 module.exports = {
-	'POST /app/*' : 'http://127.0.0.1:8080',
-	'GET /app/*' : 'http://127.0.0.1:8080',
+	// 'POST /app/*' : 'http://127.0.0.1:8080',
+	// 'GET /app/*' : 'http://127.0.0.1:8080',
 
-	'/getMenu': (req,res)=>{
+    'POST /api*' : 'http://192.168.97.135:8080',
+	'GET /api*' : 'http://192.168.97.135:8080',
+
+	/*'/api/System/getMenuList': (req,res)=>{
 		res.json({
 			"data": [
 				{
@@ -12,7 +15,7 @@ module.exports = {
 					"id": 2, "name": "学员信息", "url": '/base/student', "icon": 'user'
 				},
                 {
-					"id": 3, "name": "账号信息", "url": '/base/account', "icon": 'setting'
+					"id": 3, "name": "公告管理", "url": '/base/notice', "icon": 'setting'
 				},
                 {
 					"id": 4, "name": "课程信息", "url": '/base/course', "icon": 'setting'
@@ -29,22 +32,22 @@ module.exports = {
 
 			]
 		})
-	},
+	},*/
 
-    '/api/getTeacherList': (req,res) => {
-		res.json({
-			"data": [
-				{
-					"id": 1, "teacherName": "tom", "teacherCode": "001", "age":22,"sex": 1, "tel":123456, "course": ['c1','c2'], "teacherType": 0, "remark": "123"
-				},
-				{
-					"id": 2, "teacherName": "lucy", "teacherCode": "002","age":23,"sex": 0,  "tel":123456, "course": ['c1','c3'], "teacherType": 1, "remark": "1234"
-				}
-
-			]
-		})
-	},
-	'/api/getTeacherCourse': (req, res) => {
+    // '/api/User/findTeachers': (req,res) => {
+	// 	res.json({
+	// 		"data": [
+	// 			{
+	// 				"id": 1, "account": "tom", "age":22,"sex": 1, "tel":123456,  "teacherType": 0, "remark": "123"
+	// 			},
+	// 			{
+	// 				"id": 2, "account": "lucy","age":23,"sex": 0,  "tel":123456, "teacherType": 1, "remark": "1234"
+	// 			}
+    //
+	// 		]
+	// 	})
+	// },
+	/*'/api/Schedule/getPersonalSchedule': (req, res) => {
 		res.json({
 			"data": {
 				"schedule":[
@@ -75,54 +78,53 @@ module.exports = {
 			}
 
 		})
-	},
+	},*/
 
-	'/api/getStuAndCourse': function (req,res) {
+	/*'/api/User/getStuAndCourse': function (req,res) {
 		res.json({
 			"data": {
 				"courseList": ['c1','c2','c3','c4'],
 				"studentList": ['s1','s2','s3','s4','s5']
 			}
 		})
-    },
+    },*/
 
-	'/api/getStudentList' : function (req,res) {
+    /*'/api/User/findStudents' : function (req,res) {
 		res.json({
 			"data": [
 				{
-					"id": 1, "studentName": 'tom', "studentCode": 1001, "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 0, "tel": 1234, "course": ['c1','c2'], "level": '1', "remark": 'abc'
+					"id": 1, "account": 'tom', "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 0, "tel": 1234, "course": ['c1','c2'], "level": '1', "remark": 'abc'
 				},
 				{
-					"id": 2, "studentName": 'lucy', "studentCode": 1002, "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 1, "tel": 1234, "course": ['c2','c3'], "level": '2', "remark": 'abc'
+					"id": 2, "account": 'lucy', "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 1, "tel": 1234, "course": ['c2','c3'], "level": '2', "remark": 'abc'
 				},
 				{
-					"id": 3, "studentName": 'alice', "studentCode": 1003, "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 0, "tel": 1234, "course": ['c1','c2'], "level": '3', "remark": 'abc'
+					"id": 3, "account": 'alice', "school": 'hhit',"parentTel":88888888, "age": 18, "sex": 0, "tel": 1234, "course": ['c1','c2'], "level": '3', "remark": 'abc'
 				},
 
 			]
 
 		})
-    },
+    },*/
 
     //账号
-    '/api/getAccountList': (req,res)=>{
+    /*'/api/getNoticeList': (req,res)=>{
 		res.json({
 			"data": [
-				{ "id": 1, "accountCode": '001', "accountName": 'tom', "role": '0', "remark": 'abcde' },
-				{ "id": 2, "accountCode": '002', "accountName": 'lucy', "role": '1', "remark": 'abcde1' },
-				{ "id": 3, "accountCode": '003', "accountName": 'alice', "role": '2', "remark": 'abcde2' },
+				{ "id": 1, "noticeTitle": 'abc', "notice": 'hello'},
+				{ "id": 2, "noticeTitle": 'abcd', "notice": 'hello'},
+				{ "id": 3, "noticeTitle": 'abce', "notice" : 'hello'},
 			]
 		})
-	},
+	},*/
 
     //课程列表
-    '/api/getCourseList': (req,res)=>{
+    /*'/api/CourseColumn/findAll': (req,res)=>{
 		res.json({
 			"data": [
 				{
 					"id": 1, "courseCode": '001', "courseName": '钢琴', "courseType": 0, "remark": 'abc',
 					"teacher": ['tom'],
-
 				},
 				{
 					"id": 2, "courseCode": '002', "courseName": '吉他', "courseType": 1, "remark": 'abc',
@@ -132,42 +134,51 @@ module.exports = {
 
 			]
 		})
-	},
+	},*/
 
-    '/api/getCourseDetail': (req, res) =>{
+    /*'/api/Charge/findById': (req, res) =>{
 	    res.json({
             "data": {
                 "list": [
                     {
-                        "id": 1, "courseType": '两年课程规划', "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                        "id": 1,
+                        "courseType": '两年课程规划',
+                        "customizedCourses":{
+                            "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                        },
+
                     },
                     {
-                        "id": 2, "courseType": '一年课程规划', "col1": '1.学会50首曲目 2.掌握正确坐姿', "col2": '45分钟/课时'
+                        "id": 2,
+                        "courseType": '一年课程规划',
+                        "customizedCourses":{
+                            "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
+                        },
                     },
                 ],
-                "title": [{"dataIndex":"col1","title": '收获成果'},{"dataIndex":"col2","title": '1对1'}]
-            }
+                "title": { "col1": "收获成果", "col2": "1对1"}
+            },
 
         })
-    },
+    },*/
 
 	//个人课表
-    '/api/getPersonalSchedule': (req, res)=>{
+   /* '/api/Schedule/getPersonalSchedule': (req, res)=>{
 		res.json({
 			"data": {
 				"schedule": [
-                    {
+                    /!*{
                         "id": 1,
-                        "monday": { 'course':'c1','students':['s1','s3'], 'teacher': null, 'address':'z'},
+                        "monday": { 'id': 1,'course':'c1','students':['s1','s3'], 'teacher': null, 'address':'z'},
                         "tuesday": null,
                         "wednesday": null,
                         "thursday": null,
                         "friday": null,
                         "saturday": null,
-                        "sunday": { 'course':'c2','students':['s2'], 'teacher': null, 'address':'z'},
+                        "sunday": {  'id': 2,'course':'c2','students':['s2'], 'teacher': null, 'address':'z'},
                         "time": '9:30-10:30',
-                    },
-                    {
+                    },*!/
+                    /!*{
                         "id": 2,
                         "monday": null,
                         "tuesday": { 'course':'c1','students':null, 'teacher': 'tom','address':'z'},
@@ -177,17 +188,17 @@ module.exports = {
                         "saturday": null,
                         "sunday": { 'course':'c1','students':null, 'teacher': 'lucy', 'address':'z'},
                         "time": '9:00-10:00',
-                    }
+                    }*!/
                 ],
+                "courseList": ['c1','c2','c3'],
 				"confirm": false,
-
 
 			}
 
 		})
-	},
+	},*/
 
-    '/api/getCommentList': (req,res) =>{
+   /* '/api/getCommentList': (req,res) =>{
 		res.json({
 			"data":[
                 {
@@ -255,7 +266,7 @@ module.exports = {
 
 			]
 		})
-	},
+	},*/
 
     '/api/getCourseInfoList': (req, res)=>{
 	    res.json({

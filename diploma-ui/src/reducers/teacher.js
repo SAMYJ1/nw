@@ -42,7 +42,7 @@ let onTeacherLoad = (state= initialState, actionObj)=>{
     return {...state,loading: true}
 };
 let getTeacherSuc = (state = initialState, actionObj)=>{
-    console.log(actionObj);
+    console.log('teacherList ：',actionObj);
     let teacherList = actionObj.result.data || [];
     return {...state, loading: false, teacherList}
 };
@@ -136,7 +136,7 @@ export default createReducer(initialState, actionHandlers);
 export function getTeacherList(action) {
     return {
         types: [GET_TEACHER_LIST_LOADING, GET_TEACHER_LIST_SUC, GET_TEACHER_LIST_ERR],
-        promise: request.post(URL_GET_TEACHER_LIST).send(action),
+        promise: request.get(URL_GET_TEACHER_LIST).send(action),
         action
     }
 }
@@ -145,7 +145,7 @@ export function getTeacherDetail(action) {
     console.log(action)
     return {
         types:[GET_TEACHER_DETAIL_LOAD,GET_TEACHER_DETAIL_SUC,GET_TEACHER_DETAIL_ERR],
-        promise: request.post(URL_GET_TEACHER_DETAIL).send(action),
+        promise: request.get(URL_GET_TEACHER_DETAIL).send(action),
         action
     }
 }
@@ -169,7 +169,7 @@ export function modifyTeacher(action) {
 export function delTeacher(action) {
     return {
         types: [DEL_TEACHER_LOAD,DEL_TEACHER_SUC,DEL_TEACHER_ERR],
-        promise: request.post(URL_DEL_TEACHER).send(action),
+        promise: request.get(URL_DEL_TEACHER).send(action),
         action
     }
 }
@@ -177,7 +177,7 @@ export function delTeacher(action) {
 export function getStudentAndCourseList(action) {
     return {
         types:[GET_STU_AND_COUR_LIST_LOAD,GET_STU_AND_COUR_LIST_SUC,GET_STU_AND_COUR_LIST_ERR],
-        promise: request.get(URL_GET_STU_AND_COUR_LIST),
+        promise: request.get(URL_GET_STU_AND_COUR_LIST).send(action),
         action
     }
 }

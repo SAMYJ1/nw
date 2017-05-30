@@ -54,7 +54,7 @@ export default createReducer(initialState, actionHandlers);
 export function getPersonalSchedule(action) {
     return {
         types: [GET_SCHEDULE_LOAD,GET_SCHEDULE_SUC,GET_SCHEDULE_ERR],
-        promise: request.post(URL_GET_PER_SCHEDULE).send(action),
+        promise: request.get(URL_GET_PER_SCHEDULE).send(action),
         action
     }
 }
@@ -62,7 +62,7 @@ export function getPersonalSchedule(action) {
 export function confirmSchedule(action) {
     return {
         types: [CONFIRM_SCHEDULE_LOAD,CONFIRM_SCHEDULE_SUC,CONFIRM_SCHEDULE_ERR],
-        promise: request.post(URL_CONFIRM_SCHEDULE).send(action),
+        promise: request.get(URL_CONFIRM_SCHEDULE).send(action),
         action
     }
 }

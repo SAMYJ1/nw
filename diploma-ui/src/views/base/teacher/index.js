@@ -37,16 +37,17 @@ class Teacher extends Component{
     componentDidMount(){
 
         this.onSearch();
-        this.props.getStudentAndCourseList();
     }
     componentWillUpdate(nextProps, nextState){
-        let { showScheduleModal, title, record } = this.state;
-        if ( !showScheduleModal && nextState.showScheduleModal && title === 'modify'){
 
+        if ( !this.state.showScheduleModal && nextState.showScheduleModal ){
+            this.props.getStudentAndCourseList({account: nextState.selectedRows[0].account});
         }
     }
     componentWillReceiveProps(nextProps){
-
+        if (!this.props.reload && nextProps.reload){
+            this.onSearch()
+        }
     }
 
 
@@ -68,6 +69,9 @@ class Teacher extends Component{
                 break;
             case 'delete':
                 this.onDelete();
+                break;
+            case 'lookSchedule':
+                this.onLookSchedule();
                 break;
 
         }
@@ -92,7 +96,9 @@ class Teacher extends Component{
                     button.disabled = (len !== 1);
 
                     break;
-
+                case 'lookSchedule':
+                    button.disabled = (len !== 1);
+                    break;
             }
             return button;
         });
@@ -102,24 +108,22 @@ class Teacher extends Component{
 
         this.columns.find((item) => {
 
-            if (item.dataIndex === 'teacherName') {
+            if (item.dataIndex === 'account') {
 
                 item.render = (text, record) => {
                     return (<a onClick={this.onLookDetail.bind(this, record)}>{text}</a>);
                 }
             }
-            if (item.dataIndex === 'course') {
-                item.render = (text, record) => {
-                    return (<a onClick={this.onLookSchedule.bind(this, record)}>{text}</a>);
-                }
+
+            if (item.dataIndex === 'teacherType'){
+                item.render = (text)=> <span>{text === 0 ? '主教师': '陪练教师'}</span>
             }
         })
     }
 
     onSearch(){
         let searchData = this.props.form.getFieldValue('name');
-        console.info(searchData)
-        this.props.getTeacherList({name:searchData});
+        this.props.getTeacherList({account:searchData});
     }
     onAdd(){
         this.setState({showTeacherModal: true})
@@ -136,46 +140,68 @@ class Teacher extends Component{
 
     onLookDetail(record){
         this.props.form.setFieldsValue({teacher:{...record}});
-        this.setState({showTeacherModal: true})
+        this.setState({showTeacherModal: true, record})
     }
-    onLookSchedule(record){
-        this.props.getTeacherDetail({teacherId: record.id });
+    onLookSchedule(){
+        const record = this.state.selectedRows[0];
+        this.props.getTeacherDetail({account: record.account, character: 'teacher' });
+        this.props.getStudentAndCourseList({account: record.account});
         this.setState({showScheduleModal: true, record, title: 'modify'})
     }
 
     onSaveTeacher(){
+        const { record } = this.state;
         let teacherInfo = this.props.form.getFieldsValue();
+        let newData = record.id ? {...teacherInfo.teacher,id:record.id}: {...teacherInfo.teacher}
+        this.props.modifyTeacher(newData);
 
-        this.props.modifyTeacher(teacherInfo.teacher);
         this.props.form.resetFields();
-        this.setState({showTeacherModal: false})
+        this.setState({showTeacherModal: false, record: {}})
     }
     onCancelTeacher(){
         this.props.form.resetFields();
-        this.setState({showTeacherModal: false})
+        this.setState({showTeacherModal: false, record: {}})
     }
 
     onSaveSchedule(){
+        const {record} = this.state;
         let data = this.refs.scheduleComponent.backupData();
         console.log("the backup data is: ",data);
+        let finalData = this.formatData(data.dataSource, record.account);
 
-        this.props.modifySchedule(data);
-        this.setState({showScheduleModal:false})
+
+        this.props.modifySchedule(finalData);
+        this.setState({showScheduleModal:false, record: {}, selectedRows:[], selectedRowKeys:[]})
     }
     onCancelSave(){
-        this.setState({showScheduleModal:false})
+        this.setState({showScheduleModal:false, record: {}})
+    }
+
+    formatData(data, teacher){
+        let arr = [];
+        for (let dataItem of data){
+            delete dataItem.courseList;
+            delete dataItem.id;
+            delete dataItem.studentList;
+            let time = dataItem.time;
+            delete dataItem.time;
+
+            Object.entries(dataItem).forEach(item=>{
+                if (item[1] !== null && item[1].course !== '' && item[1].address !== '' && item[1].students.length > 0){
+                    let obj = {...item[1],time, week: item[0], teacher};
+                    arr.push(obj)
+                }
+            })
+        }
+        return arr
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        let { showScheduleModal, selectedRowKeys, selectedRows, showTeacherModal } = this.state;
-        let { teacherList, teacherDetail, loading, stuAndCourList } = this.props;
+        let { showScheduleModal, selectedRowKeys, showTeacherModal } = this.state;
+        let { teacherList, teacherDetail, loading, stuAndCourList, detailLoading } = this.props;
         const buttons = this.getButtonStatus();
         const columns = this.columns;
-
-        let courseOptions = stuAndCourList.courseList ? stuAndCourList.courseList.map((item,index)=>{
-            return <Option key={index} value={item}>{item}</Option>
-        }): [];
 
         let total = teacherList.length;
         const pagination = {
@@ -236,7 +262,9 @@ class Teacher extends Component{
                 cancelText={'取消'}
                 >
                     <div>
-                        <Schedule ref="scheduleComponent" dataSource={teacherDetail} studentList={stuAndCourList.studentList} />
+                        <Spin spinning={detailLoading} tip="正在读取数据...">
+                            <Schedule ref="scheduleComponent" dataSource={teacherDetail} studentList={stuAndCourList.studentList || []} />
+                        </Spin>
                     </div>
                 </Modal>
 
@@ -254,15 +282,18 @@ class Teacher extends Component{
                     <Row key={1}>
                         <Col key={1} span={12}>
                             <FormItem label="姓名" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacher.teacherName',{initialValue: ''})(
+                                {getFieldDecorator('teacher.account',{initialValue: ''})(
                                     <Input/>
                                 )}
                             </FormItem>
                         </Col>
                         <Col key={2} span={12}>
-                            <FormItem label="教师编号" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacher.teacherCode',{initialValue: ''})(
-                                    <Input/>
+                            <FormItem label="教师类型" labelCol={{span:6}} wrapperCol={{span: 14}}>
+                                {getFieldDecorator('teacher.teacherType',{initialValue: 0})(
+                                    <RadioGroup>
+                                        <Radio key="1" value={0}>主教师</Radio>
+                                        <Radio key="2" value={1}>陪练教师</Radio>
+                                    </RadioGroup>
                                 )}
                             </FormItem>
                         </Col>
@@ -272,14 +303,14 @@ class Teacher extends Component{
                             <FormItem label="性别" labelCol={{span:8}} wrapperCol={{span: 12}}>
                                 {getFieldDecorator('teacher.sex',{initialValue: 0})(
                                     <RadioGroup>
-                                        <Radio key="1" value={0}>男</Radio>
-                                        <Radio key="2" value={1}>女</Radio>
+                                        <Radio key="1" value={1}>男</Radio>
+                                        <Radio key="2" value={0}>女</Radio>
                                     </RadioGroup>
                                 )}
                             </FormItem>
                         </Col>
                         <Col key={2} span={12}>
-                            <FormItem label="年龄" labelCol={{span:8}} wrapperCol={{span: 12}}>
+                            <FormItem label="年龄" labelCol={{span:6}} wrapperCol={{span: 14}}>
                                 {getFieldDecorator('teacher.age',{initialValue: undefined})(
                                     <InputNumber min={18} max={60} />
                                 )}
@@ -295,20 +326,7 @@ class Teacher extends Component{
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row key={4}>
-                        <Col span={24}>
-                            <FormItem label="所授课程" labelCol={{span:4}} wrapperCol={{span: 18}}>
-                                {getFieldDecorator('teacher.course',{initialValue: undefined})(
-                                    <Select
-                                        mode='multiple'
-                                        style={{width: '100%'}}
-                                    >
-                                        {courseOptions}
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
+
                     <Row key={5}>
                         <Col span={24}>
                             <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 18}}>

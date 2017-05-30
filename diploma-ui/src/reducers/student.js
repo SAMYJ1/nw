@@ -1,4 +1,4 @@
-import { URL_GET_STUDENT_LIST, URL_MODIFY_STUDENT, URL_DEL_STUDENT } from '../utils/constants';
+import { URL_GET_STUDENT_LIST, URL_MODIFY_STUDENT, URL_DEL_STUDENT, URL_GET_ALL_COURSE_NAME } from '../utils/constants';
 import createReducer from '../utils/createReducer';
 import request from '../utils/fetchRequest';
 
@@ -14,10 +14,15 @@ const DELETE_STUDENT_LOAD = 'STUDENT.DELETE_STUDENT_LOAD';
 const DELETE_STUDENT_SUC = 'STUDENT.DELETE_STUDENT_SUC';
 const DELETE_STUDENT_ERR = 'STUDENT.DELETE_STUDENT_ERR';
 
+const GET_ALL_COURSE_LOAD = 'STUDENT.GET_ALL_COURSE_LOAD';
+const GET_ALL_COURSE_SUC = 'STUDENT.GET_ALL_COURSE_SUC';
+const GET_ALL_COURSE_ERR = 'STUDENT.GET_ALL_COURSE_ERR';
+
 
 const initialState = {
     loading: false,
     studentList: [],
+    courseList: [],
     reload: false,
 };
 
@@ -55,6 +60,17 @@ let onDelStudentErr = (state=initialState, actionObj)=>{
     return {...state, }
 };
 
+let onGetAllCourseLoad = (state=initialState, actionObj)=>{
+    return {...state, }
+};
+let onGetAllCourseSuc = (state=initialState, actionObj)=>{
+    let courseList = actionObj.result.data;
+    return {...state, courseList }
+};
+let onGetAllCourseErr = (state=initialState, actionObj)=>{
+    return {...state, }
+};
+
 
 const actionHandlers = {
     [GET_STUDENT_LIST_LOAD]: onGetStudentListLoad,
@@ -67,6 +83,9 @@ const actionHandlers = {
     [DELETE_STUDENT_SUC]: onDelStudentSuc,
     [DELETE_STUDENT_ERR]: onDelStudentErr,
 
+    [GET_ALL_COURSE_LOAD]: onGetAllCourseLoad,
+    [GET_ALL_COURSE_SUC]: onGetAllCourseSuc,
+    [GET_ALL_COURSE_ERR]: onGetAllCourseErr,
 };
 
 export default createReducer(initialState, actionHandlers);
@@ -74,7 +93,7 @@ export default createReducer(initialState, actionHandlers);
 export function getStudentList(action) {
     return {
         types: [GET_STUDENT_LIST_LOAD,GET_STUDENT_LIST_SUC,GET_STUDENT_LIST_ERR],
-        promise: request.post(URL_GET_STUDENT_LIST).send(action),
+        promise: request.get(URL_GET_STUDENT_LIST).send(action),
         action
     }
 }
@@ -90,7 +109,14 @@ export function modifyStudent(action) {
 export function delStudent(action) {
     return {
         types: [DELETE_STUDENT_LOAD,DELETE_STUDENT_SUC,DELETE_STUDENT_ERR],
-        promise: request.post(URL_DEL_STUDENT).send(action),
+        promise: request.get(URL_DEL_STUDENT).send(action),
+        action
+    }
+}
+export function getAllCourse(action) {
+    return {
+        types: [GET_ALL_COURSE_LOAD, GET_ALL_COURSE_SUC, GET_ALL_COURSE_ERR],
+        promise: request.get(URL_GET_ALL_COURSE_NAME).send(action),
         action
     }
 }

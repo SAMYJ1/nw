@@ -52,7 +52,9 @@ class Schedule extends Component{
     }
 
     onSearch(){
-        this.props.getPersonalSchedule()
+        let account = localStorage.getItem('account');
+        let character = localStorage.getItem('character');
+        this.props.getPersonalSchedule({account, character})
     }
 
     onConfirm(){
@@ -60,7 +62,7 @@ class Schedule extends Component{
             title: '是否确认？',
             content: '确认后不可更改，请谨慎选择！',
             onOk:()=>{
-                this.props.confirmSchedule({confirm: true});
+                this.props.confirmSchedule({confirm: true, message:''});
                 this.setState({confirmDisabled: true})
             },
             onCancel(){},
@@ -75,7 +77,7 @@ class Schedule extends Component{
                     content: '请把问题详情写在备注中方便我们处理！',
                     onOk:()=>{
                         console.info(values);
-                        this.props.confirmSchedule({confirm: false, remark: values.schedule.remark});
+                        this.props.confirmSchedule({confirm: false, message: values.schedule.remark});
                         this.setState({confirmDisabled: true, })
                     },
                     onCancel(){},

@@ -27,7 +27,7 @@ const buttons = [
 const studentColumn = [
     {
         title: '姓名',
-        dataIndex: 'studentName'
+        dataIndex: 'account'
     },
     {
         title: '性别',

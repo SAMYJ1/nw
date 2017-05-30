@@ -47,6 +47,7 @@
     "git-commit-build": "^1.0.0",
     "glob": "^7.0.3",
     "html-webpack-plugin": "^2.22.0",
+    "nuka-carousel": "^2.0.4",
     "pre-commit": "1.x",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",

@@ -68,10 +68,21 @@ let onGetCourseDetailLoad = (state=initialState, actionObj)=>{
 };
 let onGetCourseDetailSuc = (state=initialState, actionObj)=>{
     let courseDetailData = actionObj.result.data;
+    /*console.log('unformated',courseDetailData)
+    let {list,title} = courseDetailData;
+    courseDetailData.list = list && list.map(listItem =>{
+            delete listItem.id;
+            return {courseType:listItem.courseType, ...listItem.customizedCourses};
+        });
+    courseDetailData.title = title && Object.entries(title).map(item =>{
+            return {dataIndex: item[0], title: item[1]}
+
+        });
+    console.log("formated",courseDetailData)*/
     return {...state, courseDetailData};
 };
 let onGetCourseDetailErr = (state=initialState, actionObj)=>{
-    return {...state};
+    return {...state, courseDetailData: {}};
 };
 
 let onModifyCourseDetailLoad = (state=initialState, actionObj)=>{
@@ -110,7 +121,7 @@ export default createReducer(initialState, actionHandlers);
 export function getCourseList(action) {
     return {
         types: [GET_COURSE_LIST_LOAD,GET_COURSE_LIST_SUC,GET_COURSE_LIST_ERR],
-        promise: request.post(URL_GET_COURSE_LIST).send(action),
+        promise: request.get(URL_GET_COURSE_LIST).send(action),
         action
     }
 }
@@ -124,14 +135,14 @@ export function modifyCourse(action) {
 export function deleteCourse(action) {
     return {
         types: [DELETE_COURSE_LOAD,DELETE_COURSE_SUC,DELETE_COURSE_ERR],
-        promise: request.post(URL_DELETE_COURSE).send(action),
+        promise: request.get(URL_DELETE_COURSE).send(action),
         action
     }
 }
 export function getCourseDetail(action) {
     return {
         types: [GET_COURSE_DETAIL_LOAD,GET_COURSE_DETAIL_SUC,GET_COURSE_DETAIL_ERR],
-        promise: request.post(URL_GET_COURSE_DETAIL).send(action),
+        promise: request.get(URL_GET_COURSE_DETAIL).send(action),
         action
     }
 }

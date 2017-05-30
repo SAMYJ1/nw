@@ -1,5 +1,83 @@
-.homePic {
-  flex: 1 0 auto;
-  //background: url('/sunshine/img/home.jpg') center center   no-repeat;
-  background-size: 80%;
+
+:global{
+  .home{
+
+
+    .container {
+      margin: 0 auto;
+      padding: 40px;
+      width: 90%;
+      background: #e0d5ee;
+    }
+  }
+
+
+  .topArea{
+    width: 100%;
+    height: 300px;
+    background-color: #c2dbff;
+    position: relative;
+
+    .title{
+
+      h1{
+        text-decoration: none;
+        font-size: 24px;
+        padding-left: 15px;
+      }
+    }
+
+    .topAreaLeft{
+      width: 50%;
+      height: 100%;
+      background-color: aquamarine;
+      float: left;
+
+      .carouselBox{
+        width: 80%;
+        height: 250px;
+        margin: 0 auto;
+
+        .imgBox{
+          width: 100%;
+          height: 250px;
+          margin: 0 auto;
+          background: url("../../img/centerEnvironment/IMG_1270.JPG") center center no-repeat;
+          background-size: auto 250px;
+
+
+        }
+      }
+
+    }
+    .topAreaRight{
+      width: 50%;
+      height: 100%;
+      background-color: #ff9900;
+      float: left;
+
+
+      .notice{
+
+        ul{
+          list-style-type: none;
+          margin-top: 20px;
+
+          li{
+            line-height: 38px;
+            padding-left: 40px;
+            border-bottom: dashed 1px;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+
+  }
+
+
+
+
+
+
 }

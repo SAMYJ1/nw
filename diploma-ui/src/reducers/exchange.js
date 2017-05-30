@@ -15,7 +15,8 @@ const ADD_REPLY_SUC = 'EXCHANGE.ADD_REPLY_SUC';
 const ADD_REPLY_ERR = 'EXCHANGE.ADD_REPLY_ERR';
 
 const initialState = {
-    commentList: []
+    commentList: [],
+    reload: false,
 };
 
 let onGetCommentListLoad = (state,actionObj)=>{
@@ -30,23 +31,23 @@ let onGetCommentListErr = (state,actionObj)=>{
 };
 
 let onAddCommentLoad = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 let onAddCommentSuc = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: true}
 };
 let onAddCommentErr = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 
 let onAddReplyLoad = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 let onAddReplySuc = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: true}
 };
 let onAddReplyErr = (state,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 
 const actionHandlers = {
@@ -66,7 +67,7 @@ export default createReducer(initialState, actionHandlers);
 export function getCommentList(action) {
     return {
         types: [GET_COMMENT_LIST_LOAD,GET_COMMENT_LIST_SUC,GET_COMMENT_LIST_ERR],
-        promise: request.post(URL_GET_COMMENT_LIST).send(action),
+        promise: request.get(URL_GET_COMMENT_LIST).send(action),
         action
     }
 }
@@ -74,7 +75,7 @@ export function getCommentList(action) {
 export function addComment(action) {
     return {
         types: [ADD_COMMENT_LOAD,ADD_COMMENT_SUC,ADD_COMMENT_ERR],
-        promise: request.post(URL_ADD_COMMENT).send(action),
+        promise: request.get(URL_ADD_COMMENT).send(action),
         action
     }
 }
@@ -82,7 +83,7 @@ export function addComment(action) {
 export function addReply(action) {
     return {
         types: [ADD_REPLY_LOAD,ADD_REPLY_SUC,ADD_REPLY_ERR],
-        promise: request.post(URL_ADD_REPLY).send(action),
+        promise: request.get(URL_ADD_REPLY).send(action),
         action
     }
 }

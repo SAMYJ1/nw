@@ -6,54 +6,10 @@ import TimeEditableCell from './timeEditableCell';
 
 
 export default class Schedule extends Component{
-
-
     constructor(props){
         super(props);
         this.state = {
-            dataSource: [
-                {
-                    id: 0,
-                    monday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    tuesday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    wednesday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    thursday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    friday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    saturday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    sunday: {
-                        course: '',
-                        students: [],
-                        address: '',
-                    },
-                    time: ''
-                },
-
-
-            ]
+            dataSource: []
         };
         this.columns = [
             {
@@ -198,15 +154,17 @@ export default class Schedule extends Component{
                 students: [],
                 address: '',
             },
-            time: ''
+            time: '-'
         };
     }
 
+
     componentWillMount(){
         console.log('will mount:: ', this.props);
+        let initialData = JSON.parse(JSON.stringify(this.initData));
         if (this.props.dataSource && this.props.studentList ){
             let data = JSON.parse(JSON.stringify(this.props.dataSource));
-            let dataSource = data.schedule || [];
+            let dataSource =  !data.schedule||data.schedule.length<1 ? [initialData] : data.schedule;
             let courseList = data.courseList;
             let studentList = this.props.studentList;
 
@@ -220,15 +178,19 @@ export default class Schedule extends Component{
     }
 
     componentWillReceiveProps(nextProps){
+        let initialData = JSON.parse(JSON.stringify(this.initData));
 
         if (this.props.dataSource !==nextProps.dataSource ){
             let data = JSON.parse(JSON.stringify(nextProps.dataSource));
-            let dataSource = data.schedule || [];
+            let dataSource =  !data.schedule||data.schedule.length<1 ? [initialData] : data.schedule;
             let courseList = data.courseList;
             let studentList = this.props.studentList;
             dataSource.forEach(item=>{item.studentList = studentList;item.courseList = courseList});
 
             this.setState({ dataSource, })
+        }
+        if (this.props.studentList !== nextProps.studentList){
+
         }
 
     }
@@ -266,7 +228,7 @@ export default class Schedule extends Component{
 
     render() {
         let { dataSource } = this.state;
-        console.info(dataSource);
+
         return (
             <div>
                 <Button onClick={ ::this.handleAdd }>Add</Button>
