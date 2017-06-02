@@ -24,6 +24,11 @@ const buttons = [
         label: '课表',
         action: 'lookSchedule',
         icon: 'setting'
+    },
+    {
+        label: '重置密码',
+        action: 'resetPwd',
+        icon: 'setting',
     }
 
 
@@ -34,10 +39,10 @@ const teacherColumn= [
         title: '姓名',
         dataIndex: 'account',
     },
-    // {
-    //     title: '教师编号',
-    //     dataIndex: 'teacherCode',
-    // },
+    {
+        title: '性别',
+        dataIndex: 'sex',
+    },
     {
         title: '联系方式',
         dataIndex: 'tel'

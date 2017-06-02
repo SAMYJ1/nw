@@ -3,46 +3,69 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import { Text, View, ListView, Image, StyleSheet, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import {NoticeBar, WhiteSpace} from 'antd-mobile'
+import {getNoticeList,  } from '../../reducers/notice';
 
 
-export default class Home extends Component{
+class Home extends Component{
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state= {
-            dataSource: ds.cloneWithRows([
-                'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie',
-            ]),
+            noticeList: []
         }
     }
     static navigationOptions = ({navigation})=> ({
         title: '首页',
-        headerRight: (
-            <Text onPress={()=>{navigation.state.params.handleClickMe()}}>我</Text>
-        ),
+        // headerRight: (
+        //     <Text onPress={()=>{navigation.state.params.handleClickMe()}}>我   </Text>
+        // ),
         tabBarIcon: ({ tintColor }) => (
             <Icon name="home" size={20} color={tintColor} />
         ),
     });
 
+    componentWillMount(){
+        this.props.getNoticeList()
+    }
     componentDidMount(){
-        this.props.navigation.setParams({handleClickMe: this.onClickMe.bind(this) })
+        // this.props.navigation.setParams({handleClickMe: this.onClickMe.bind(this) })
     }
+    componentWillReceiveProps(nextProps){
+        if (this.props.noticeList !== nextProps.noticeList){
+            this.setState({noticeList: nextProps.noticeList})
+        }
+    }
+
     onClickMe(){
-        alert('click me')
+
     }
 
 
 
+    showNoticeDetail(content){
+        this.props.navigation.navigate('NoticeDetail',{content})
 
+    }
 
     render(){
-
+        const {noticeList} = this.state;
 
 
         return (
 
         <ScrollView>
+            {
+                noticeList > 0 ?
+                    <NoticeBar
+                        marqueeProps={{ loop: true, style: { padding: '0 0.15rem' } }}
+                        onClick={this.showNoticeDetail.bind(this, noticeList[0].context)}
+                    >
+                        {noticeList[0].context}
+                    </NoticeBar>
+                    :
+                    null
+            }
+
             <View style={{flex: 1, backgroundColor: '#fff'}}>
                 <Image style={{height: 200, width: 200, marginLeft: 92}} source={require('../../img/logo.jpg')}/>
             </View>
@@ -82,6 +105,11 @@ export default class Home extends Component{
     }
 }
 
+export default connect(state => {
+    return {
+        ...state.notice
+    }
+}, dispatch=> bindActionCreators({ getNoticeList,  },dispatch))(Home);
 
 
 

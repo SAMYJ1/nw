@@ -7,6 +7,17 @@ import StudentList from './schedule/students';
 import Comment from './comment';
 import Course from './course';
 import Login from './Login';
+import Notice from './notice';
+import AddNotice from './notice/addNotice';
+import showNoticeDetail from './notice/showNotice';
+import Student from './student';
+import StudentDetail from './student/studentDetail'
+import Teacher from './teacher';
+import TeacherDetail from './teacher/teacherDetail'
+import CourseManage from './courseManage';
+import CourseManageDetail from './courseManage/courseManageDetail'
+
+
 
 
 const TabContainer = TabNavigator(
@@ -20,6 +31,7 @@ const TabContainer = TabNavigator(
     {
         lazy: true,
         tabBarPosition: 'bottom',
+        swipeEnabled: true,
         tabBarOptions: {
             activeTintColor: '#3e9ce9',
             inactiveTintColor: '#999999',
@@ -38,12 +50,16 @@ const TabContainer = TabNavigator(
 );
 const AdminContainer = TabNavigator(
     {
+        CourseManage: {screen: CourseManage},
+        Teacher: {screen: Teacher},
         Main: { screen: Home},
-
+        Notice: {screen: Notice},
+        Student: { screen: Student },
     },
     {
         lazy: true,
         tabBarPosition: 'bottom',
+        swipeEnabled: false,
         tabBarOptions: {
             activeTintColor: '#3e9ce9',
             inactiveTintColor: '#999999',
@@ -78,8 +94,20 @@ const App = StackNavigator(
         Students: {
             screen: StudentList
         },
-        ShowNoticeDetail: {
-
+        NoticeDetail: {
+            screen: showNoticeDetail
+        },
+        NewNotice: {
+            screen: AddNotice
+        },
+        StudentDetail: {
+            screen: StudentDetail
+        },
+        TeacherDetail: {
+            screen: TeacherDetail
+        },
+        CourseManageDetail: {
+            screen: CourseManageDetail
         }
     }
 );

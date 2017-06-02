@@ -102,7 +102,7 @@ class App extends React.Component {
         });
         if(next) {
             let data = resetPasswordRibbon.getFieldsValue();
-            this.props.sendPassword(data);
+            this.props.sendPassword({oldPassword: data.oldPassword, newPassword: data.password});
             resetPasswordRibbon.resetFields();
             this.setState({ showPasswordModal: false });
         }

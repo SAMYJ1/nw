@@ -24,6 +24,8 @@ const initialState = {
     studentList: [],
     courseList: [],
     reload: false,
+    modifySuccess: false,
+    deleteSuccess: false
 };
 
 
@@ -39,22 +41,23 @@ let onGetStudentListErr = (state=initialState, actionObj)=>{
 };
 
 let onModifyStudentLoad = (state=initialState, actionObj)=>{
-    return {...state, reload: false}
+    return {...state, reload: false, modifySuccess: false}
 };
 let onModifyStudentSuc = (state=initialState, actionObj)=>{
-    return {...state, reload: true}
+    return {...state, reload: true, modifySuccess: true}
 };
 let onModifyStudentErr = (state=initialState, actionObj)=>{
-    return {...state, reload: false}
+    console.log(actionObj.result)
+    return {...state, reload: false, modifySuccess: false}
 };
 let onDelStudentLoad = (state=initialState, actionObj)=>{
-    return {...state, }
+    return {...state, deleteSuccess: false }
 };
 let onDelStudentSuc = (state=initialState, actionObj)=>{
     let studentList = state.studentList;
     let rmIdx = studentList.findIndex(item=> item.account === actionObj.action.account);
     rmIdx !== -1 && studentList.splice(rmIdx,1);
-    return {...state, studentList }
+    return {...state, studentList, deleteSuccess: true }
 };
 let onDelStudentErr = (state=initialState, actionObj)=>{
     return {...state, }

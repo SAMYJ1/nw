@@ -54,8 +54,8 @@ let onDelCourseLoad = (state=initialState, actionObj)=>{
 };
 let onDelCourseSuc = (state=initialState, actionObj)=>{
     let courseList = state.courseList;
-    let rmIdx = courseList.findIndex(item=>item.id === actionObj.action.id);
-    courseList.splice(rmIdx, 1);
+    let rmIdx = courseList.findIndex(item=>item.courseName === actionObj.action.courseName);
+    rmIdx !== -1 && courseList.splice(rmIdx, 1);
     
     return {...state, courseList};
 };
@@ -68,17 +68,7 @@ let onGetCourseDetailLoad = (state=initialState, actionObj)=>{
 };
 let onGetCourseDetailSuc = (state=initialState, actionObj)=>{
     let courseDetailData = actionObj.result.data;
-    /*console.log('unformated',courseDetailData)
-    let {list,title} = courseDetailData;
-    courseDetailData.list = list && list.map(listItem =>{
-            delete listItem.id;
-            return {courseType:listItem.courseType, ...listItem.customizedCourses};
-        });
-    courseDetailData.title = title && Object.entries(title).map(item =>{
-            return {dataIndex: item[0], title: item[1]}
 
-        });
-    console.log("formated",courseDetailData)*/
     return {...state, courseDetailData};
 };
 let onGetCourseDetailErr = (state=initialState, actionObj)=>{

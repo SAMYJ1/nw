@@ -21,6 +21,11 @@ const buttons = [
         action: 'delete',
         icon: 'delete'
     },
+    {
+        label: '重置密码',
+        action: 'resetPwd',
+        icon: 'setting',
+    }
 
 ];
 

@@ -17,13 +17,15 @@ const DELETE_NOTICE_ERR = 'NOTICE.DELETE_NOTICE_ERR';
 const initialState = {
     loading: false,
     noticeList: [],
+    saved: false
 };
 
 let onGetNoticeListLoad = (state=initialState, actionObj)=>{
     return {...state, loading: true}
 };
 let onGetNoticeListSuc = (state=initialState, actionObj)=>{
-    return {...state, loading: false}
+    let noticeList = actionObj.result.data;
+    return {...state, loading: false, noticeList}
 };
 let onGetNoticeListErr = (state=initialState, actionObj)=>{
     return {...state, loading: false}
@@ -42,13 +44,14 @@ let onDelNoticeErr = (state=initialState, actionObj)=>{
 };
 
 let onAddNoticeLoad = (state= initialState, actionObj)=>{
-    return {...state, reload: false}
+    return {...state, reload: false, saved:false}
 };
 let onAddNoticeSuc = (state= initialState, actionObj)=>{
-    return {...state, reload: true}
+
+    return {...state, reload: true, saved: true}
 };
 let onAddNoticeErr = (state= initialState, actionObj)=>{
-    return {...state, reload: false}
+    return {...state, reload: false, saved: false}
 };
 
 

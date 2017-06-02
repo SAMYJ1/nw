@@ -1,7 +1,8 @@
 export const HOST = '';
 
 export const URL_LOGIN = HOST + '/api/User/login';
-export const URL_RESET_PASSWORD = HOST + '';
+export const URL_RESET_PASSWORD = HOST + '/api/User/passwordReset';
+export const URL_MODIFY_PASSWORD = HOST + '/api/User/changePassword';
 
 export const URL_GET_MENU = HOST + '/api/System/getMenuList';
 

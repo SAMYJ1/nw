@@ -19,6 +19,9 @@ export default function promiseMiddleware( objMethods ) {
                     let error = {message:'No data returns.'};
                     return next({ ...rest, error, type: ERROR })
                 }
+                if (!result.data && result.data !== null){
+                    return next({...rest, type: ERROR})
+                }
                 if(result.status === 'error'){
 
                     let errorMsg = result.message;

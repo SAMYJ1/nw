@@ -37,7 +37,7 @@ let onDelNoticeLoad = (state=initialState, actionObj)=>{
 let onDelNoticeSuc = (state=initialState, actionObj)=>{
     let noticeList = state.noticeList;
     let rmIdx = noticeList.findIndex(item=>item.id === actionObj.action.id);
-    noticeList.splice(rmIdx, 1);
+    rmIdx !== -1 && noticeList.splice(rmIdx, 1);
     return {...state, noticeList}
 };
 let onDelNoticeErr = (state=initialState, actionObj)=>{

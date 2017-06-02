@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux'
 import { connect } from 'react-redux'
 import { getSchedule } from '../../reducers/schedule';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {List, TextareaItem} from 'antd-mobile'
 
 /*const scheduleData = [
         {

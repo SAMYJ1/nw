@@ -128,9 +128,9 @@ class Course extends Component {
     }
 
     onDelete() {
-        let {selectedRowKeys} = this.state;
+        let {selectedRowKeys, selectedRows} = this.state;
         console.log(selectedRowKeys);
-        this.props.deleteCourse({id: selectedRowKeys[0]});
+        this.props.deleteCourse({courseName: selectedRows[0].courseName});
         this.setState({selectedRowKeys: [], selectedRows: []})
     }
 

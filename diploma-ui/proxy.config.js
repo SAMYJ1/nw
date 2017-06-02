@@ -268,7 +268,7 @@ module.exports = {
 		})
 	},*/
 
-    '/api/getCourseInfoList': (req, res)=>{
+    /*'/api/getCourseInfoList': (req, res)=>{
 	    res.json({
             "data": [
                 {
@@ -298,7 +298,7 @@ module.exports = {
 
             ]
         })
-    }
+    }*/
 };
 
 

@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col, Table, Modal, Spin, Form, Input, InputNumber, Select, Radio  } from 'antd';
 import { getTeacherList, getTeacherDetail, delTeacher, modifySchedule, modifyTeacher, getStudentAndCourseList } from '../../../reducers/teacher';
+import { resetPassword } from '../../../reducers/user';
 import Schedule from '../../../components/scheduleTable'
 import { ButtonGroup } from '../../../components/ButtonGroup';
 import { buttons,teacherColumn } from './schedule.config';
@@ -73,6 +74,9 @@ class Teacher extends Component{
             case 'lookSchedule':
                 this.onLookSchedule();
                 break;
+            case 'resetPwd':
+                this.resetPwd();
+                break;
 
         }
     }
@@ -99,6 +103,10 @@ class Teacher extends Component{
                 case 'lookSchedule':
                     button.disabled = (len !== 1);
                     break;
+                case 'resetPwd':
+                    button.disabled = (len !== 1);
+
+                    break
             }
             return button;
         });
@@ -113,6 +121,10 @@ class Teacher extends Component{
                 item.render = (text, record) => {
                     return (<a onClick={this.onLookDetail.bind(this, record)}>{text}</a>);
                 }
+            }
+            if (item.dataIndex === 'sex'){
+                item.render = (text)=> <span>{text === 0 ? '女': '男'}</span>
+
             }
 
             if (item.dataIndex === 'teacherType'){
@@ -132,10 +144,14 @@ class Teacher extends Component{
         this.props.form.resetFields(['name']);
     }
     onDelete(){
-        let { selectedRowKeys } = this.state;
-        console.log(selectedRowKeys);
-        this.props.delTeacher({id: selectedRowKeys[0]});
+        let { selectedRowKeys, selectedRows } = this.state;
+
+        this.props.delTeacher({account: selectedRows[0].account});
         this.setState({selectedRowKeys:[], selectedRows:[]})
+    }
+    resetPwd() {
+        let {selectedRows} = this.state;
+        this.props.resetPassword({account: selectedRows[0].account, character: 'teacher'});
     }
 
     onLookDetail(record){
@@ -360,5 +376,5 @@ export default connect((state)=>{
     return {
         ...state.reducers.teacher
     }
-},(dispatch)=>(bindActionCreators({ getTeacherList, getTeacherDetail, delTeacher, modifyTeacher, modifySchedule, getStudentAndCourseList  },dispatch))
+},(dispatch)=>(bindActionCreators({ getTeacherList, getTeacherDetail, delTeacher, modifyTeacher, modifySchedule, getStudentAndCourseList , resetPassword },dispatch))
 )(TeacherSchedule)

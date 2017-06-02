@@ -1,6 +1,6 @@
 import createReducer from '../utils/createReducer';
 import { notification } from 'antd';
-import { URL_LOGIN, URL_RESET_PASSWORD, URL_GET_ADMIN_MESSAGE, URL_DELETE_MESSAGE } from '../utils/constants';
+import { URL_LOGIN, URL_RESET_PASSWORD, URL_MODIFY_PASSWORD, URL_GET_ADMIN_MESSAGE, URL_DELETE_MESSAGE } from '../utils/constants';
 import { delCookie } from '../utils';
 import request from '../utils/fetchRequest';
 
@@ -15,6 +15,10 @@ export const ON_LOGOUT = 'USER.ON_LOGOUT';
 export const LOADING_PASSWORD="USER.LOADING_PASSWORD";
 export const ON_RESET_PASSWORD_SUCCESS="USER.ON_RESET_PASSWORD_SUCCESS";
 export const PASSWORD_BACKEND_ERROR="USER.PASSWORD_BACKEND_ERROR";
+
+export const RESET_PASSWORD_LOAD = 'USER.RESET_PASSWORD_LOAD';
+export const RESET_PASSWORD_SUC = 'USER.RESET_PASSWORD_SUC';
+export const RESET_PASSWORD_ERR = 'USER.RESET_PASSWORD_ERR';
 
 export const GET_ADMIN_MESSAGE_LOAD = 'USER.GET_ADMIN_MESSAGE_LOAD';
 export const GET_ADMIN_MESSAGE_SUC = 'USER.GET_ADMIN_MESSAGE_SUC';
@@ -97,6 +101,15 @@ let onDeleteMessageErr = (state=initialState,actionObj)=> {
     return {...state}
 };
 
+let onResetPasswordLoad = (state=initialState, actionObj)=>{
+    return {...state}
+};
+let onResetPasswordSuc = (state=initialState, actionObj)=>{
+    return {...state}
+};
+let onResetPasswordErr = (state=initialState, actionObj)=>{
+    return {...state}
+};
 
 const actionHandlers = {
     [LOADING]: onLoading,
@@ -116,6 +129,10 @@ const actionHandlers = {
     [DELETE_MESSAGE_LOAD]: onDeleteMessageLoad,
     [DELETE_MESSAGE_SUC]: onDeleteMessageSuc,
     [DELETE_MESSAGE_ERR]: onDeleteMessageErr,
+
+    [RESET_PASSWORD_LOAD]: onResetPasswordLoad,
+    [RESET_PASSWORD_SUC]: onResetPasswordSuc,
+    [RESET_PASSWORD_ERR]: onResetPasswordErr,
 };
 
 export default createReducer(initialState, actionHandlers);
@@ -139,7 +156,15 @@ export function logout(action) {
 export function sendPassword(action) {
     return {
         types: [LOADING_PASSWORD, ON_RESET_PASSWORD_SUCCESS, PASSWORD_BACKEND_ERROR],
-        promise: request.post(URL_RESET_PASSWORD).send(action),
+        promise: request.get(URL_MODIFY_PASSWORD).send(action),
+        action
+    }
+}
+
+export function resetPassword(action) {
+    return {
+        types: [RESET_PASSWORD_LOAD, RESET_PASSWORD_SUC, RESET_PASSWORD_ERR],
+        promise: request.get(URL_RESET_PASSWORD).send(action),
         action
     }
 }

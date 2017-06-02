@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, ListView, StyleSheet, TouchableHighlight, TextInput, Button} from 'react-native';
+import {View, Text, ListView, StyleSheet, TouchableHighlight, TextInput, Button, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Icon from 'react-native-vector-icons/EvilIcons'
@@ -105,17 +105,19 @@ const commentData = [
 
 ];
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 class Comment extends Component{
     constructor(props){
         super(props);
         this.state = {
-            dataSource: this.ds.cloneWithRows([]),
+            dataSource: ds.cloneWithRows([]),
             text: '',
             textHeight: 40,
             replyUserName: '',
             commentId: undefined,
+            refreshing: false,
         };
-        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
     static navigationOptions = ({navigation})=>({
         title: '交流区',
@@ -131,8 +133,12 @@ class Comment extends Component{
 
     }
     componentWillReceiveProps(nextProps){
+        if (nextProps.commentList){
+            this.setState({refreshing: false})
+        }
         if (this.props.commentList !== nextProps.commentList){
-            this.setState({dataSource: this.ds.cloneWithRows(nextProps.commentList)})
+            console.log(nextProps.commentList)
+            this.setState({dataSource: ds.cloneWithRows(nextProps.commentList)})
         }
     }
 
@@ -143,6 +149,7 @@ class Comment extends Component{
     }
 
     renderRow(rowData){
+        console.log(rowData)
 
         return (
             <View key={rowData.id} style={styles.commentItem}>
@@ -162,7 +169,7 @@ class Comment extends Component{
                     rowData.replys.length > 0 ?
                         <Reply replys={rowData.replys || []} commentId={rowData.id} showReply={this.review.bind(this)}/>
                         :
-                        ''
+                        null
                 }
             </View>
 
@@ -183,10 +190,15 @@ class Comment extends Component{
     onSubmit(){
         let {commentId,text} = this.state;
         if (commentId){
-            this.props.addReply({id: commentId, content: text})
+            this.props.addReply({ commentId, content: text})
         }else {
             this.props.addComment({content: text})
         }
+    }
+
+    _onRefresh() {
+        this.setState({refreshing: true});
+        this.props.getCommentList()
     }
 
     render(){
@@ -197,6 +209,12 @@ class Comment extends Component{
                 <ListView
                     dataSource={dataSource}
                     renderRow={ this.renderRow.bind(this)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                        />
+                    }
                 />
                 <View style={{flexDirection: 'row'}}>
                     <TextInput

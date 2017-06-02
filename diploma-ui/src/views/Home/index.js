@@ -1,6 +1,6 @@
 import React from 'react'
-import { Modal } from 'antd';
-import Carousel from 'nuka-carousel'
+import { Modal, Carousel, Spin } from 'antd';
+// import Carousel from 'nuka-carousel'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {getNoticeList} from '../../reducers/notice'
@@ -20,9 +20,8 @@ class Home extends React.Component {
     }
 
 
-
     clickNoticeItem(value){
-        console.log(value)
+
         this.setState({showNoticeModal: true, content: value})
     }
 
@@ -30,7 +29,7 @@ class Home extends React.Component {
         const { noticeList, } = this.props;
         const {showNoticeModal, content} = this.state;
 
-        console.log()
+
         return (
             <div className="home">
                 <div className="container">
@@ -38,13 +37,15 @@ class Home extends React.Component {
                         <div className="topAreaLeft">
                             <div>
                                 <h1>展示</h1>
-                                <hr/>
+
                             </div>
                             <div className="carouselBox">
-                                <Carousel>
-                                    <div className="imgBox" />
-                                    <div className="imgBox" />
-                                    <div className="imgBox" />
+                                <Carousel autoplay>
+                                    <div className="imgBox1" />
+                                    <div className="imgBox2" />
+                                    <div className="imgBox3" />
+                                    <div className="imgBox4" />
+                                    <div className="imgBox5" />
                                 </Carousel>
                             </div>
                         </div>
@@ -57,9 +58,10 @@ class Home extends React.Component {
                                     {
                                         noticeList.map((item,index) =>{
                                             return (
-                                                <a key={index} onClick={this.clickNoticeItem.bind(this, item.notice)}>
-                                                    <li className="noticeItem">{item.noticeTitle}</li>
-                                                </a>
+
+                                                <li className="noticeItem">
+                                                    <a key={index} onClick={this.clickNoticeItem.bind(this, item.context)}>{item.title}</a>
+                                                </li>
                                             )
                                         })
                                     }
@@ -68,12 +70,12 @@ class Home extends React.Component {
                         </div>
                     </div>
 
-                    <div className="container">
-                        <div>
+                    <div className="guideContainer">
+                        <div className="guideTitle">
                             <h1>工作室简介</h1>
 
                         </div>
-                        <div>
+                        <div className="guideContent">
                             <p>可乐音乐工作室成立于2012年，至2016年1月，共有三处总教学点，五处校外合作，
                                 其中巨龙南路八佰城市走廊圆弧为可乐音乐工作室总部，占地面积300平。
                                 集品牌乐器销售与音乐教育为一体。
@@ -89,16 +91,39 @@ class Home extends React.Component {
                         </div>
                     </div>
 
+                    <div className="activity">
+                        <div className="title">
+                            <h1>活动展示</h1>
+                        </div>
+                        <div className="activityShow">
+                            <Carousel autoplay effect="fade">
+                                <div className="imgBox1" ><p className="text">爵士鼓课堂</p></div>
+                                <div className="imgBox2" ><p className="text">爵士鼓基本功练习</p></div>
+                                <div className="imgBox3" ><p className="text">尤克里里课堂</p></div>
+                                <div className="imgBox4" ><p className="text">吉他课堂</p></div>
+                                <div className="imgBox5" ><p className="text">演出排练课堂</p></div>
+                            </Carousel>
+                        </div>
+
+                    </div>
+                    <div>
+
+                    </div>
+
                 </div>
                 <Modal
                     title="公告信息"
+                    width={400}
+
                     visible={showNoticeModal}
                     onCancel={()=>{this.setState({showNoticeModal: false})}}
                     footer={null}
                 >
-                    <pre>
-                        {content}
-                    </pre>
+                    <div style={{minHeight:300, width: '80%', margin: '20px auto'}}>
+                        <pre>
+                            {content}
+                        </pre>
+                    </div>
                 </Modal>
 
             </div>

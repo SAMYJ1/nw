@@ -23,9 +23,15 @@ class Request{
                 try {
                     let response = await fetch(this.url,{
                         method: this.method,
+                        mode: 'cros',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+
                         body: JSON.stringify(action),
-                        catch: 'default',
-                        credentials: 'include',
+                        // catch: 'default',
+                        // credentials: 'include',
                     });
                     let body = await response.json();
                     return body

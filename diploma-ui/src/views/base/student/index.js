@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Table, Form, Select, Spin, Input, Radio, Modal } from 'antd'
 import { ButtonGroup } from '../../../components/ButtonGroup';
 import { getStudentList, delStudent, modifyStudent, getAllCourse } from '../../../reducers/student';
+import { resetPassword } from '../../../reducers/user';
 import { studentColumn, buttons } from './student.config';
 
 const FormItem = Form.Item;
@@ -55,6 +56,9 @@ class Student extends Component{
             case 'delete':
                 this.onDelete();
                 break;
+            case 'resetPwd':
+                this.resetPwd();
+                break;
 
         }
     }
@@ -78,6 +82,10 @@ class Student extends Component{
                     button.disabled = (len !== 1);
 
                     break;
+                case 'resetPwd':
+                    button.disabled = (len !== 1);
+
+                    break
 
             }
             return button;
@@ -95,10 +103,10 @@ class Student extends Component{
                 }
             }
             if (item.dataIndex === 'sex'){
-                item.render = text => text === 0 ? '男' : '女';
+                item.render = text => text === 0 ? '女' : '男';
             }
             if (item.dataIndex === 'course'){
-                item.render = text => text.join('、')
+                item.render = text => text ? text.join('、'): ''
             }
 
         })
@@ -115,10 +123,13 @@ class Student extends Component{
         this.props.form.resetFields(['account']);
     }
     onDelete(){
-        let { selectedRowKeys } = this.state;
-        console.log(selectedRowKeys);
-        this.props.delStudent({id: selectedRowKeys[0]});
+        let { selectedRowKeys, selectedRows } = this.state;
+        this.props.delStudent({account: selectedRows[0].account});
         this.setState({selectedRowKeys:[], selectedRows:[]})
+    }
+    resetPwd() {
+        let {selectedRows} = this.state;
+        this.props.resetPassword({account: selectedRows[0].account, character: 'student'});
     }
     onLookDetail(record){
         this.props.form.setFieldsValue({student:{...record}});
@@ -132,7 +143,6 @@ class Student extends Component{
 
         let newData = record.id ? {...data.student, id: record.id}: {...data.student};
         this.props.modifyStudent(newData);
-        console.info(data)
 
         this.props.form.resetFields();
         this.setState({showStudentModal:false, record: {}})
@@ -244,8 +254,8 @@ class Student extends Component{
                                     rules: [{ required: true, message: '请选择姓名' }],
                                 })(
                                     <RadioGroup>
-                                        <Radio key="1" value={0}>男</Radio>
-                                        <Radio key="2" value={1}>女</Radio>
+                                        <Radio key="1" value={1}>男</Radio>
+                                        <Radio key="2" value={0}>女</Radio>
                                     </RadioGroup>
                                 )}
                             </FormItem>
@@ -340,5 +350,5 @@ export default connect(state=>{
     return {
         student: {...state.reducers.student},
     }
-},dispatch=>(bindActionCreators({ getStudentList, delStudent, modifyStudent, getAllCourse },dispatch))
+},dispatch=>(bindActionCreators({ getStudentList, delStudent, modifyStudent, getAllCourse, resetPassword },dispatch))
 )(StudentInfo);

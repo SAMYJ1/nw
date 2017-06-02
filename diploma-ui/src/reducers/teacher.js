@@ -86,10 +86,10 @@ let onDelTeacherLoad = (state=initialState, actionObj)=>{
     return {...state}
 };
 let onDelTeacherSuc = (state=initialState, actionObj)=>{
-    let id = actionObj.action.id;
+
     let { teacherList } = state;
-    let delId = teacherList.findIndex(item=>item.id === id);
-    teacherList.splice(delId, 1);
+    let delId = teacherList.findIndex(item=>item.account === actionObj.action.account);
+    delId !== -1 && teacherList.splice(delId, 1);
 
     return {...state, teacherList}
 };
