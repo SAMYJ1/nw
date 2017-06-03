@@ -90,6 +90,7 @@ let onDelTeacherSuc = (state=initialState, actionObj)=>{
     let { teacherList } = state;
     let delId = teacherList.findIndex(item=>item.account === actionObj.action.account);
     delId !== -1 && teacherList.splice(delId, 1);
+    console.log(teacherList)
 
     return {...state, teacherList}
 };

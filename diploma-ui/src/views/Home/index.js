@@ -120,7 +120,7 @@ class Home extends React.Component {
                     footer={null}
                 >
                     <div style={{minHeight:300, width: '80%', margin: '20px auto'}}>
-                        <pre>
+                        <pre className="preStyle">
                             {content}
                         </pre>
                     </div>
