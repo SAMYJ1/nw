@@ -117,7 +117,7 @@ class Schedule extends Component{
                         dataSource={dataSource}
                         renderRow={ this.renderRow.bind(this) }
                     />
-                    {
+                    {/*{
                         confirm?
                             ''
                             :
@@ -135,7 +135,7 @@ class Schedule extends Component{
                                     />
                                 </View>
                             </View>
-                    }
+                    }*/}
 
                 </ScrollView>
 

@@ -32,13 +32,11 @@ class Home extends Component{
     }
     componentWillReceiveProps(nextProps){
         if (this.props.noticeList !== nextProps.noticeList){
+            console.log('notice list !!!!', nextProps.noticeList)
             this.setState({noticeList: nextProps.noticeList})
         }
     }
 
-    onClickMe(){
-
-    }
 
 
 
@@ -49,18 +47,19 @@ class Home extends Component{
 
     render(){
         const {noticeList} = this.state;
+        console.log('noticeList', noticeList)
 
 
         return (
 
         <ScrollView>
             {
-                noticeList > 0 ?
+                noticeList.length > 0 ?
                     <NoticeBar
-                        marqueeProps={{ loop: true, style: { padding: '0 0.15rem' } }}
+                        mode="link"
                         onClick={this.showNoticeDetail.bind(this, noticeList[0].context)}
                     >
-                        {noticeList[0].context}
+                        {noticeList[0].title + '     ' + noticeList[0].pubDate}
                     </NoticeBar>
                     :
                     null

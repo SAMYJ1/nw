@@ -26,7 +26,7 @@ class CourseManage extends Component{
             <Text onPress={()=>{console.log(navigation);navigation.state.params.addNewCourse()}}>新增   </Text>
         ),
         tabBarIcon: ({ tintColor }) => (
-            <Icon name="user-o" size={20} color={tintColor} />
+            <Icon name="columns" size={20} color={tintColor} />
         )
     });
 

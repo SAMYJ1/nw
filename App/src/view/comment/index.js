@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, ListView, StyleSheet, TouchableHighlight, TextInput, Button, RefreshControl} from 'react-native';
+import {View, Text, ListView, StyleSheet, TouchableHighlight, TextInput, Button, RefreshControl, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Icon from 'react-native-vector-icons/EvilIcons'
@@ -189,6 +189,7 @@ class Comment extends Component{
     }
     onSubmit(){
         let {commentId,text} = this.state;
+        Keyboard.dismiss()
         if (commentId){
             this.props.addReply({ commentId, content: text})
         }else {

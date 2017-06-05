@@ -50,11 +50,12 @@ const TabContainer = TabNavigator(
 );
 const AdminContainer = TabNavigator(
     {
-        CourseManage: {screen: CourseManage},
-        Teacher: {screen: Teacher},
+
         Main: { screen: Home},
         Notice: {screen: Notice},
         Student: { screen: Student },
+        Teacher: {screen: Teacher},
+        CourseManage: {screen: CourseManage},
     },
     {
         lazy: true,
