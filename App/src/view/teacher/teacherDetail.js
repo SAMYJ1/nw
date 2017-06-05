@@ -17,7 +17,7 @@ class TeacherDetail extends Component{
 
     }
     static navigationOptions = ({navigation})=> ({
-        title: '教师信息',
+        title: '教师详情',
         headerRight: (
             <Text onPress={() => {navigation.state.params.saveTeacher()}}>保存   </Text>
         ),

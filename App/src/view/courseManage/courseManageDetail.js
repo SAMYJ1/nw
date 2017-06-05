@@ -17,7 +17,7 @@ class CourseManageDetail extends Component{
 
     }
     static navigationOptions = ({navigation})=> ({
-        title: '学员信息',
+        title: '课程详情',
         headerRight: (
             <Text onPress={() => {navigation.state.params.saveCourse()}}>保存   </Text>
         ),
