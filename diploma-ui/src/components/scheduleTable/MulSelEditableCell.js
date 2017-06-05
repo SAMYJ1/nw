@@ -14,6 +14,7 @@ export default class MulSelEditableCell extends Component{
             editable: false,
             studentList: [],
             courseList: [],
+            studentOption: [],
         };
 
     }
@@ -27,6 +28,11 @@ export default class MulSelEditableCell extends Component{
         if (this.props.record){
             let {courseList, studentList } = this.props.record;
             this.setState({courseList, studentList})
+        }
+        if (this.props.value && this.props.record){
+            let data = this.props.record.studentList.find(item => item.courseName === this.props.value.course);
+            let studentOption = data ? data.studentList : [];
+            this.setState({studentOption})
         }
 
     }
@@ -44,6 +50,11 @@ export default class MulSelEditableCell extends Component{
             let {studentList} = nextProps.record;
             this.setState({studentList})
         }
+        if (this.props.value !==nextProps.value && this.props.record.studentList!==nextProps.record.studentList){
+            let data = studentList.find(item => item.courseName === nextProps.value.course);
+            let studentOption = data ? data.studentList : [];
+            this.setState({studentOption})
+        }
 
     }
 
@@ -53,8 +64,11 @@ export default class MulSelEditableCell extends Component{
         this.setState({ students:value })
     }
     onCourseChange(value){
-        console.log(value)
-        this.setState({ course:value === undefined ? '': value })
+        const {studentList} = this.state;
+        console.log('courseChange!!', studentList, value)
+        let selectedData  = studentList.find(item => item.courseName === value);
+        let studentOption = selectedData ? selectedData.studentList : [];
+        this.setState({ course:value === undefined ? '': value ,studentOption})
     }
     onAddressChange(e){
         let address = e.target.value;
@@ -74,11 +88,11 @@ export default class MulSelEditableCell extends Component{
     }
 
     render(){
-        let { editable, address, course, students, studentList, courseList } = this.state;
+        let { editable, address, course, students, studentOption, courseList } = this.state;
 
         let cellStr = course && address && students.length > 0 ? <div><p>课程：{course}</p><p>地点：{address}</p><p>学生：{students.join('、')}</p></div>: '';
 
-        let stuChildren = studentList ? studentList.map((item,index)=>{
+        let stuChildren = studentOption ? studentOption.map((item,index)=>{
             return <Option key={index} value={item}>{item}</Option>
         }) : [];
         let courseChildren = courseList ? courseList.map((item,index)=>{
@@ -112,8 +126,7 @@ export default class MulSelEditableCell extends Component{
                             <div>
                                 <label>学生:</label>
                                 <Select
-                                    tags
-                                    multiple
+                                    mode="multiple"
                                     defaultValue={students}
                                     style={{ width: '100%' }}
                                     onChange={ ::this.onStudentChange }

@@ -41,13 +41,14 @@ class Teacher extends Component{
     }
     componentWillUpdate(nextProps, nextState){
 
-        if ( !this.state.showScheduleModal && nextState.showScheduleModal ){
-            this.props.getStudentAndCourseList({account: nextState.selectedRows[0].account});
-        }
+
     }
     componentWillReceiveProps(nextProps){
         if (!this.props.reload && nextProps.reload){
             this.onSearch()
+        }
+        if (!this.props.studentListReady && nextProps.studentListReady && (this.props.stuAndCourList !==nextProps.stuAndCourList)){
+            this.setState({showScheduleModal: true, record:this.state.selectedRows[0], title: 'modify'})
         }
     }
 
@@ -162,7 +163,7 @@ class Teacher extends Component{
         const record = this.state.selectedRows[0];
         this.props.getTeacherDetail({account: record.account, character: 'teacher' });
         this.props.getStudentAndCourseList({account: record.account});
-        this.setState({showScheduleModal: true, record, title: 'modify'})
+
     }
 
     onSaveTeacher(){
@@ -266,7 +267,7 @@ class Teacher extends Component{
                 </div>
 
                 <Modal
-                title="课程信息"
+                title="设置课表"
                 key={1}
                 width={1200}
                 maskClosable={false}

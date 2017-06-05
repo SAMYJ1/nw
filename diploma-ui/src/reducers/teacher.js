@@ -36,6 +36,7 @@ const initialState = {
     loading: false,
     detailLoading: false,
     reload: false,
+    studentListReady: false
 };
 /*获取教师列表*/
 let onTeacherLoad = (state= initialState, actionObj)=>{
@@ -99,11 +100,11 @@ let onDelTeacherErr = (state=initialState, actionObj)=>{
 };
 /*获取学生列表*/
 let onGetStuAndCourListLoad = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, studentListReady: false}
 };
 let onGetStuAndCourListSuc = (state=initialState,actionObj)=>{
     let stuAndCourList = actionObj.result.data;
-    return {...state, stuAndCourList}
+    return {...state, stuAndCourList, studentListReady: true}
 };
 let onGetStuAndCourListErr = (state=initialState,actionObj)=>{
     return {...state}
