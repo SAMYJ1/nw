@@ -144,7 +144,6 @@ export function getTeacherList(action) {
 }
 
 export function getTeacherDetail(action) {
-    console.log(action)
     return {
         types:[GET_TEACHER_DETAIL_LOAD,GET_TEACHER_DETAIL_SUC,GET_TEACHER_DETAIL_ERR],
         promise: request.get(URL_GET_TEACHER_DETAIL).send(action),
