@@ -16,6 +16,7 @@ export default class MulSelEditableCell extends Component{
             courseList: [],
             studentOption: [],
         };
+        this.addressList = ['教室1','教室2','教室3','教室4','教室5'];
 
     }
     
@@ -30,7 +31,7 @@ export default class MulSelEditableCell extends Component{
             this.setState({courseList, studentList})
         }
         if (this.props.value && this.props.record){
-            let data = this.props.record.studentList.find(item => item.courseName === this.props.value.course);
+            let data = this.props.record.studentList && this.props.record.studentList.find(item => item.courseName === this.props.value.course);
             let studentOption = data ? data.studentList : [];
             this.setState({studentOption})
         }
@@ -70,9 +71,9 @@ export default class MulSelEditableCell extends Component{
         let studentOption = selectedData ? selectedData.studentList : [];
         this.setState({ course:value === undefined ? '': value ,studentOption})
     }
-    onAddressChange(e){
-        let address = e.target.value;
-        this.setState({ address })
+    onAddressChange(value){
+
+        this.setState({ address: value })
     }
 
     check(){
@@ -98,6 +99,9 @@ export default class MulSelEditableCell extends Component{
         let courseChildren = courseList ? courseList.map((item,index)=>{
             return <Option key={index} value={item}>{item}</Option>
         }) : [];
+        let addressChildren = this.addressList.map(item => {
+            return <Option key={item}>{item}</Option>
+        });
 
         return (
             <div className={style.editableCell}>
@@ -117,11 +121,14 @@ export default class MulSelEditableCell extends Component{
                             </div>
                             <div>
                                 <label>地点:</label>
-                                <Input
-                                    value={ address }
+                                <Select
+                                    allowClear
+                                    defaultValue={ address }
                                     onChange={ ::this.onAddressChange }
-                                    onPressEnter={ ::this.check}
-                                />
+                                    style={{width: '100%'}}
+                                >
+                                    {addressChildren}
+                                </Select>
                             </div>
                             <div>
                                 <label>学生:</label>

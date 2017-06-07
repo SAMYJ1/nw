@@ -10,6 +10,7 @@ import { studentColumn, buttons } from './student.config';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
+const confirm = Modal.confirm;
 
 class Student extends Component{
     constructor(props){
@@ -124,12 +125,25 @@ class Student extends Component{
     }
     onDelete(){
         let { selectedRowKeys, selectedRows } = this.state;
-        this.props.delStudent({account: selectedRows[0].account});
-        this.setState({selectedRowKeys:[], selectedRows:[]})
+        confirm({
+            title: '确认删除？',
+            onOk:()=>{
+                this.props.delStudent({account: selectedRows[0].account});
+                this.setState({selectedRowKeys:[], selectedRows:[]})
+            },
+            onCancel(){},
+        })
+
     }
     resetPwd() {
         let {selectedRows} = this.state;
-        this.props.resetPassword({account: selectedRows[0].account, character: 'student'});
+        confirm({
+            title: '确认重置？',
+            onOk:()=>{
+                this.props.resetPassword({account: selectedRows[0].account, character: 'student'});
+            },
+            onCancel(){},
+        })
     }
     onLookDetail(record){
         this.props.form.setFieldsValue({student:{...record}});

@@ -108,8 +108,8 @@ export default class Schedule extends Component{
                     return (
                         this.state.dataSource.length > 1 ?
                             (
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(index)}>
-                                    <a href="#">Delete</a>
+                                <Popconfirm title="确认删除吗?" onConfirm={() => this.onDelete(index)}>
+                                    <a href="#">删除</a>
                                 </Popconfirm>
                             ) : null
                     );

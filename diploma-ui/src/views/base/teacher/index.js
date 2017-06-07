@@ -10,8 +10,7 @@ import { buttons,teacherColumn } from './schedule.config';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const Option = Select.Option;
-
+const confirm = Modal.confirm;
 
 class Teacher extends Component{
     constructor(props){
@@ -147,12 +146,28 @@ class Teacher extends Component{
     onDelete(){
         let { selectedRowKeys, selectedRows } = this.state;
 
-        this.props.delTeacher({account: selectedRows[0].account});
-        this.setState({selectedRowKeys:[], selectedRows:[]})
+        confirm({
+            title: '是否确认删除？',
+
+            onOk:()=>{
+                this.props.delTeacher({account: selectedRows[0].account});
+                this.setState({selectedRowKeys:[], selectedRows:[]})
+            },
+            onCancel(){},
+        })
+
     }
     resetPwd() {
         let {selectedRows} = this.state;
-        this.props.resetPassword({account: selectedRows[0].account, character: 'teacher'});
+        confirm({
+            title: '是否重置密码？',
+
+            onOk:()=>{
+                this.props.resetPassword({account: selectedRows[0].account, character: 'teacher'});
+            },
+            onCancel(){},
+        })
+
     }
 
     onLookDetail(record){
@@ -216,7 +231,7 @@ class Teacher extends Component{
     render() {
         const { getFieldDecorator } = this.props.form;
         let { showScheduleModal, selectedRowKeys, showTeacherModal } = this.state;
-        let { teacherList, teacherDetail, loading, stuAndCourList, detailLoading } = this.props;
+        let { teacherList, teacherDetail, detailLoading, tableLoading, stuAndCourList, } = this.props;
         const buttons = this.getButtonStatus();
         const columns = this.columns;
 
@@ -241,132 +256,133 @@ class Teacher extends Component{
             }
         };
         return (
-            <div>
-                <div className="controlWrapper wrapper">
-                    <Row>
-                        <Col span={6}>
-                            <FormItem
-                                label="名字"
-                                labelCol={{span: 4}}
-                                wrapperCol={{span: 16}}
-                            >
-                                {getFieldDecorator('name',{
-                                    initialValue: ''
-                                })(
-                                    <Input/>
-                                )}
-                            </FormItem>
+            <Spin spinning={detailLoading} tip="正在读取数据...">
+                <div>
+                    <div className="controlWrapper wrapper">
+                        <Row>
+                            <Col span={6}>
+                                <FormItem
+                                    label="名字"
+                                    labelCol={{span: 4}}
+                                    wrapperCol={{span: 16}}
+                                >
+                                    {getFieldDecorator('name', {
+                                        initialValue: ''
+                                    })(
+                                        <Input/>
+                                    )}
+                                </FormItem>
 
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="buttonWrapper">
-                            <ButtonGroup dataProvider={ buttons } onClick={ ::this.onClickButton } />
-                        </Col>
-                    </Row>
-                </div>
-
-                <Modal
-                title="设置课表"
-                key={1}
-                width={1200}
-                maskClosable={false}
-                loading={false}
-                visible={ showScheduleModal }
-                onOk={ ::this.onSaveSchedule }
-                onCancel={ ::this.onCancelSave }
-                okText={'保存'}
-                cancelText={'取消'}
-                >
-                    <div>
-                        <Spin spinning={detailLoading} tip="正在读取数据...">
-                            <Schedule ref="scheduleComponent" dataSource={teacherDetail} studentList={stuAndCourList.studentList || []} />
-                        </Spin>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="buttonWrapper">
+                                <ButtonGroup dataProvider={ buttons } onClick={ ::this.onClickButton }/>
+                            </Col>
+                        </Row>
                     </div>
-                </Modal>
 
-                <Modal
-                    title="教师信息"
-                    key={2}
-                    width={600}
-                    maskClosable={false}
-                    visible={ showTeacherModal }
-                    onOk={ ::this.onSaveTeacher }
-                    onCancel={ ::this.onCancelTeacher }
-                    okText={'保存'}
-                    cancelText={'取消'}
-                >
-                    <Row key={1}>
-                        <Col key={1} span={12}>
-                            <FormItem label="姓名" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacher.account',{initialValue: ''})(
-                                    <Input/>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col key={2} span={12}>
-                            <FormItem label="教师类型" labelCol={{span:6}} wrapperCol={{span: 14}}>
-                                {getFieldDecorator('teacher.teacherType',{initialValue: 0})(
-                                    <RadioGroup>
-                                        <Radio key="1" value={0}>主教师</Radio>
-                                        <Radio key="2" value={1}>陪练教师</Radio>
-                                    </RadioGroup>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row key={2}>
-                        <Col key={1} span={12}>
-                            <FormItem label="性别" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacher.sex',{initialValue: 0})(
-                                    <RadioGroup>
-                                        <Radio key="1" value={1}>男</Radio>
-                                        <Radio key="2" value={0}>女</Radio>
-                                    </RadioGroup>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col key={2} span={12}>
-                            <FormItem label="年龄" labelCol={{span:6}} wrapperCol={{span: 14}}>
-                                {getFieldDecorator('teacher.age',{initialValue: undefined})(
-                                    <InputNumber min={18} max={60} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row key={3}>
-                        <Col span={12}>
-                            <FormItem label="联系方式" labelCol={{span:8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('teacher.tel',{initialValue: ''})(
-                                    <Input/>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
+                    <Modal
+                        title="设置课表"
+                        key={1}
+                        width={1200}
+                        maskClosable={false}
+                        loading={false}
+                        visible={ showScheduleModal }
+                        onOk={ ::this.onSaveSchedule }
+                        onCancel={ ::this.onCancelSave }
+                        okText={'保存'}
+                        cancelText={'取消'}
+                    >
+                        <div>
+                            <Schedule ref="scheduleComponent" dataSource={teacherDetail}
+                                      studentList={stuAndCourList.studentList || []}/>
+                        </div>
+                    </Modal>
 
-                    <Row key={5}>
-                        <Col span={24}>
-                            <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 18}}>
-                                {getFieldDecorator('teacher.remark',{initialValue: ''})(
-                                    <Input type="textarea" rows={3}/>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
+                    <Modal
+                        title="教师信息"
+                        key={2}
+                        width={600}
+                        maskClosable={false}
+                        visible={ showTeacherModal }
+                        onOk={ ::this.onSaveTeacher }
+                        onCancel={ ::this.onCancelTeacher }
+                        okText={'保存'}
+                        cancelText={'取消'}
+                    >
+                        <Row key={1}>
+                            <Col key={1} span={12}>
+                                <FormItem label="姓名" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('teacher.account', {initialValue: ''})(
+                                        <Input/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col key={2} span={12}>
+                                <FormItem label="教师类型" labelCol={{span: 6}} wrapperCol={{span: 14}}>
+                                    {getFieldDecorator('teacher.teacherType', {initialValue: 0})(
+                                        <RadioGroup>
+                                            <Radio key="1" value={0}>主教师</Radio>
+                                            <Radio key="2" value={1}>陪练教师</Radio>
+                                        </RadioGroup>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row key={2}>
+                            <Col key={1} span={12}>
+                                <FormItem label="性别" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('teacher.sex', {initialValue: 0})(
+                                        <RadioGroup>
+                                            <Radio key="1" value={1}>男</Radio>
+                                            <Radio key="2" value={0}>女</Radio>
+                                        </RadioGroup>
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col key={2} span={12}>
+                                <FormItem label="年龄" labelCol={{span: 6}} wrapperCol={{span: 14}}>
+                                    {getFieldDecorator('teacher.age', {initialValue: undefined})(
+                                        <InputNumber min={18} max={60}/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row key={3}>
+                            <Col span={12}>
+                                <FormItem label="联系方式" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('teacher.tel', {initialValue: ''})(
+                                        <Input/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
 
-                </Modal>
+                        <Row key={5}>
+                            <Col span={24}>
+                                <FormItem label="备注" labelCol={{span: 4}} wrapperCol={{span: 18}}>
+                                    {getFieldDecorator('teacher.remark', {initialValue: ''})(
+                                        <Input type="textarea" rows={3}/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
 
-                <Spin spinning={ loading } tip="正在读取数据...">
-                    <Table
-                        rowKey={record => record.id}
-                        rowSelection={rowSelection}
-                        pagination={ pagination }
-                        dataSource={teacherList}
-                        bordered
-                        columns={ columns }
-                    />
-                </Spin>
-            </div>
+                    </Modal>
+
+                    <Spin spinning={ tableLoading } tip="正在读取数据...">
+                        <Table
+                            rowKey={record => record.id}
+                            rowSelection={rowSelection}
+                            pagination={ pagination }
+                            dataSource={teacherList}
+                            bordered
+                            columns={ columns }
+                        />
+                    </Spin>
+                </div>
+            </Spin>
         )
     }
 }

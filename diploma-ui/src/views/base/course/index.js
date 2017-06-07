@@ -13,6 +13,7 @@ import CourseDetail from './courseDetail';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
+const confirm = Modal.confirm;
 
 class Course extends Component {
     constructor(props) {
@@ -41,6 +42,9 @@ class Course extends Component {
         if (!this.props.course.reload && nextProps.course.reload) {
             this.onSearch();
         }
+        if (!this.props.course.loadDetailSuc && nextProps.course.loadDetailSuc){
+            this.setState({showDetailModal: true})
+        }
     }
 
     onClickButton(e) {
@@ -52,7 +56,6 @@ class Course extends Component {
             case 'search':
                 this.onSearch();
                 break;
-
             case 'add':
                 this.onAdd();
                 break;
@@ -130,15 +133,22 @@ class Course extends Component {
     onDelete() {
         let {selectedRowKeys, selectedRows} = this.state;
         console.log(selectedRowKeys);
-        this.props.deleteCourse({courseName: selectedRows[0].courseName});
-        this.setState({selectedRowKeys: [], selectedRows: []})
+        confirm({
+            title: '确认删除?',
+            onOk:()=>{
+                this.props.deleteCourse({courseName: selectedRows[0].courseName});
+                this.setState({selectedRowKeys: [], selectedRows: []})
+            },
+            onCancel(){},
+        })
+
     }
 
     onSetDetail(){
         let { selectedRowKeys, selectedRows } = this.state;
 
         this.props.getCourseDetail({id: selectedRowKeys[0]});
-        this.setState({showDetailModal: true})
+        // this.setState({showDetailModal: true})
     }
 
     onLookDetail(record) {
@@ -249,122 +259,124 @@ class Course extends Component {
             }
         };
         return (
-            <div>
-                <div className="controlWrapper wrapper">
-                    <Row>
-                        <Col span={6}>
-                            <FormItem
-                                label="课程名"
-                                labelCol={{span: 4}}
-                                wrapperCol={{span: 16}}
-                            >
-                                {getFieldDecorator('search.courseName', {
-                                    initialValue: ''
-                                })(
-                                    <Input placeholder="请输入课程名搜索"/>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="buttonWrapper">
-                            <ButtonGroup dataProvider={ buttons } onClick={ ::this.onClickButton }/>
-                        </Col>
-                    </Row>
+            <Spin spinning={course.loading} tip="正在读取数据...">
+                <div>
+                    <div className="controlWrapper wrapper">
+                        <Row>
+                            <Col span={6}>
+                                <FormItem
+                                    label="课程名"
+                                    labelCol={{span: 4}}
+                                    wrapperCol={{span: 16}}
+                                >
+                                    {getFieldDecorator('search.courseName', {
+                                        initialValue: ''
+                                    })(
+                                        <Input placeholder="请输入课程名搜索"/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="buttonWrapper">
+                                <ButtonGroup dataProvider={ buttons } onClick={ ::this.onClickButton }/>
+                            </Col>
+                        </Row>
+                    </div>
+
+                    <Modal
+                        title="课程信息"
+                        visible={showCourseModal}
+                        width={600}
+                        maskClosable={false}
+                        onOk={::this.onSaveCourse }
+                        onCancel={ ::this.onCancel }
+                    >
+                        <Row>
+                            <Col span={12}>
+                                <FormItem label="课程名" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('course.courseName', {
+                                        rules: [{required: true, message: '请输入课程名'}]
+                                    })(
+                                        <Input/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem label="课程编号" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('course.courseCode', {
+                                        rules: [{required: true, message: '请输入课程号'}]
+                                    })(
+                                        <Input/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <FormItem label="种类" labelCol={{span: 8}} wrapperCol={{span: 12}}>
+                                    {getFieldDecorator('course.courseType', {
+                                        rules: [{required: true, message: '请选择种类'}],
+                                        initialValue: 0
+                                    })(
+                                        <RadioGroup>
+                                            <Radio key="1" value={0}>主课</Radio>
+                                            <Radio key="2" value={1}>陪练课</Radio>
+                                        </RadioGroup>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24}>
+                                <FormItem label="任课教师" labelCol={{span: 4}} wrapperCol={{span: 18}}>
+                                    {getFieldDecorator('course.teacher', {initialValue: undefined})(
+                                        <Select
+                                            mode='multiple'
+                                            style={{width: '100%'}}
+                                        >
+                                            {teacherOptions}
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24}>
+                                <FormItem label="备注" labelCol={{span: 4}} wrapperCol={{span: 18}}>
+                                    {getFieldDecorator('course.remark', {initialValue: ''})(
+                                        <Input type="textarea" rows={3}/>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                    </Modal>
+                    <Modal title="基础信息"
+                           visible={showDetailModal}
+                           width={600}
+                           maskClosable={false}
+                           onOk={ ::this.onSaveDetail }
+                           onCancel={ ::this.onCancelDetail }
+                           afterClose={ ::this.afterClose}
+                    >
+                        <CourseDetail
+                            ref="courseDetail"
+                            dataSource={courseDetailData.list || []}
+                            tableTitle={courseDetailData.title || []}/>
+                    </Modal>
+
+                    <Spin spinning={course.tableLoading} tip="正在读取数据...">
+                        <Table
+                            rowKey='id'
+                            rowSelection={rowSelection}
+                            pagination={ pagination }
+                            dataSource={course.courseList}
+                            bordered
+                            columns={ columns }
+                        />
+                    </Spin>
                 </div>
-
-                <Modal
-                    title="课程信息"
-                    visible={showCourseModal}
-                    width={600}
-                    maskClosable={false}
-                    onOk={::this.onSaveCourse }
-                    onCancel={ ::this.onCancel }
-                >
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label="课程名" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('course.courseName', {
-                                    rules: [{required: true, message: '请输入课程名'}]
-                                })(
-                                    <Input/>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label="课程编号" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('course.courseCode', {
-                                    rules: [{required: true, message: '请输入课程号'}]
-                                })(
-                                    <Input/>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label="种类" labelCol={{span: 8}} wrapperCol={{span: 12}}>
-                                {getFieldDecorator('course.courseType', {
-                                    rules: [{required: true, message: '请选择种类'}],
-                                    initialValue: 0
-                                })(
-                                    <RadioGroup>
-                                        <Radio key="1" value={0}>主课</Radio>
-                                        <Radio key="2" value={1}>陪练课</Radio>
-                                    </RadioGroup>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label="任课教师" labelCol={{span: 4}} wrapperCol={{span: 18}}>
-                                {getFieldDecorator('course.teacher', {initialValue: undefined})(
-                                    <Select
-                                        mode='multiple'
-                                        style={{width: '100%'}}
-                                    >
-                                        {teacherOptions}
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label="备注" labelCol={{span:4}} wrapperCol={{span: 18}}>
-                                {getFieldDecorator('course.remark',{initialValue: ''})(
-                                    <Input type="textarea" rows={3}/>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                </Modal>
-                <Modal title="基础信息"
-                       visible={showDetailModal}
-                       width={600}
-                       maskClosable={false}
-                       onOk={ ::this.onSaveDetail }
-                       onCancel={ ::this.onCancelDetail }
-                       afterClose={ ::this.afterClose}
-                >
-                    <CourseDetail
-                        ref="courseDetail"
-                        dataSource={courseDetailData.list || []}
-                        tableTitle={courseDetailData.title || []} />
-                </Modal>
-
-                <Spin spinning={course.loading} tip="正在读取数据...">
-                    <Table
-                        rowKey='id'
-                        rowSelection={rowSelection}
-                        pagination={ pagination }
-                        dataSource={course.courseList}
-                        bordered
-                        columns={ columns }
-                    />
-                </Spin>
-            </div>
+            </Spin>
         )
     }
 }

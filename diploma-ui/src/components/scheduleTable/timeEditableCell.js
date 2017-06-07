@@ -74,7 +74,18 @@ export default class TimeEditableCell extends Component{
                         </div>
                         :
                         <div className={style.editableCellTextWrapper}>
-                            {value || ''}
+
+                            {
+                                value ?
+                                    <div style={{textAlign: 'center'}}>
+                                        <p>{value.slice(0 , 5)}</p>
+                                        <p>-</p>
+                                        <p>{value.slice(6)}</p>
+                                    </div>
+                                    :
+                                    ''
+                            }
+
                             <Icon type="edit" className={style.editableCellIcon} onClick={this.edit.bind(this)}/>
                         </div>
                 }

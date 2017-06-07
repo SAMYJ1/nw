@@ -24,21 +24,23 @@ const MODIFY_COURSE_DETAIL_ERR = 'COURSE.MODIFY_COURSE_DETAIL_ERR';
 
 const initialState = {
     loading: false,
+    tableLoading: false,
     courseList: [],
     reload: false,
     courseDetailData: {},
+    loadDetailSuc: false,
 };
 
 let onGetCourseListLoad = (state=initialState, actionObj)=>{
-    return {...state, loading: true};
+    return {...state, tableLoading: true};
 };
 let onGetCourseListSuc = (state=initialState, actionObj)=>{
     let courseList = actionObj.result.data;
     console.info(courseList)
-    return {...state, loading: false, courseList};
+    return {...state, tableLoading: false, courseList};
 };
 let onGetCourseListErr = (state=initialState, actionObj)=>{
-    return {...state, loading: false};
+    return {...state, tableLoading: false};
 };
 let onModifyCourseLoad = (state=initialState, actionObj)=>{
     return {...state, reload: false};
@@ -64,22 +66,22 @@ let onDelCourseErr = (state=initialState, actionObj)=>{
 };
 
 let onGetCourseDetailLoad = (state=initialState, actionObj)=>{
-    return {...state};
+    return {...state, loadDetailSuc: false, loading:true};
 };
 let onGetCourseDetailSuc = (state=initialState, actionObj)=>{
     let courseDetailData = actionObj.result.data;
 
-    return {...state, courseDetailData};
+    return {...state, courseDetailData, loadDetailSuc: true, loading: false};
 };
 let onGetCourseDetailErr = (state=initialState, actionObj)=>{
-    return {...state, courseDetailData: {}};
+    return {...state, courseDetailData: {}, loading: false};
 };
 
 let onModifyCourseDetailLoad = (state=initialState, actionObj)=>{
-    return {...state};
+    return {...state, };
 };
 let onModifyCourseDetailSuc = (state=initialState, actionObj)=>{
-    return {...state};
+    return {...state, };
 };
 let onModifyCourseDetailErr = (state=initialState, actionObj)=>{
     return {...state};

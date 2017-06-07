@@ -33,31 +33,31 @@ const initialState = {
     teacherList: [],
     teacherDetail: {},
     stuAndCourList: {},
-    loading: false,
+    tableLoading: false,
     detailLoading: false,
     reload: false,
     studentListReady: false
 };
 /*获取教师列表*/
 let onTeacherLoad = (state= initialState, actionObj)=>{
-    return {...state,loading: true}
+    return {...state,tableLoading: true}
 };
 let getTeacherSuc = (state = initialState, actionObj)=>{
     console.log('teacherList ：',actionObj);
     let teacherList = actionObj.result.data || [];
-    return {...state, loading: false, teacherList}
+    return {...state, tableLoading: false, teacherList}
 };
 let getTeacherErr = (state = initialState, actionObj)=>{
 
-    return { ...state, loading: false}
+    return { ...state, tableLoading: false}
 };
 /*获取教师课程信息*/
 let onGetTeacherDetailLoad = (state = initialState, actionObj)=>{
-    return {...state, detailLoading: true}
+    return {...state, detailLoading: true, }
 };
 let onGetTeacherDetailSuc = (state = initialState, actionObj)=>{
     let teacherDetail = actionObj.result.data;
-    return { ...state, teacherDetail, detailLoading: false}
+    return { ...state, teacherDetail, detailLoading: false, }
 };
 let onGetTeacherDetailErr = (state = initialState, actionObj)=>{
     return {...state, detailLoading: false}
