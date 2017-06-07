@@ -3,107 +3,10 @@ import {View, Text, ListView, StyleSheet, TouchableHighlight, TextInput, Button,
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Icon from 'react-native-vector-icons/EvilIcons'
-import {formatDate} from '../../utils/formateDate'
 import Reply from './reply'
 import {getCommentList, addComment, addReply} from '../../reducers/comment';
 
 
-const commentData = [
-    {
-        "_id": "56131e0b7efe639f3fafda0e",
-        "aid": "560a438f10f611091d0933c6",
-        "content": "fhgfh",
-        "userId": {
-            "_id": "56131df47efe639f3fafda0d",
-            "userName": "黑子",
-        },
-        "__v": 0,
-        "updated": "2015-10-06T01:04:11.816Z",
-        "created": "2015-10-06T01:04:11.816Z",
-        "status": 1,
-        "replys": [{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d959ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5ca142f4077"
-        },{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d959ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5ca142f4072"
-        }
-        ]
-    },
-    {
-        "_id": "56131e0b7efe639f3fafda0f",
-        "aid": "560a438f10f611091d0933cf",
-        "content": "fhgfh",
-        "userId": {
-            "_id": "56131df47efe639f3fafda0d",
-            "userName": "黑子",
-        },
-        "__v": 0,
-        "updated": "2015-10-06T01:04:11.816Z",
-        "created": "2015-10-06T01:04:11.816Z",
-        "status": 1,
-        "replys": [{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d959ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5ca142f4077"
-        },{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d959ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5ca142f4072"
-        }
-        ]
-    },
-    {
-        "_id": "56131e0b7efe639f3fafda",
-        "aid": "560a438f10f611091d093cf",
-        "content": "fhgfh",
-        "userId": {
-            "_id": "56131df47efe639f3afda0d",
-            "userName": "黑子",
-        },
-        "__v": 0,
-        "updated": "2015-10-06T01:04:11.816Z",
-        "created": "2015-10-06T01:04:11.816Z",
-        "status": 1,
-        "replys": [{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d95ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5c142f4077"
-        },{
-            "created": "2016-09-05T06:32:47.990Z",
-            "userInfo": {
-                "userName": "俊峰1",
-                "id": "57c64921c5d959ab07294be4"
-            },
-            "content": "@黑子 这是什么东西",
-            "_id": "57cd118f80bfe5ca142f4072"
-        }
-        ]
-    },
-
-];
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -140,6 +43,9 @@ class Comment extends Component{
             console.log(nextProps.commentList)
             this.setState({dataSource: ds.cloneWithRows(nextProps.commentList)})
         }
+        if (!this.props.reload && nextProps.reload){
+            this.props.getCommentList();
+        }
     }
 
     review(commentId, userName){
@@ -148,8 +54,9 @@ class Comment extends Component{
         this.setState({ commentId , text: '@'+ userName+ ' '})
     }
 
+
     renderRow(rowData){
-        console.log(rowData)
+
 
         return (
             <View key={rowData.id} style={styles.commentItem}>
@@ -160,7 +67,7 @@ class Comment extends Component{
                         </View>
                         <View style={styles.commentFooter}>
                             <Text style={{flex: 2, textAlign: 'right', fontStyle: 'italic',color: '#aea99c'}}> {rowData.user.userName}</Text>
-                            <Text style={{flex:1, textAlign: 'center', fontStyle: 'italic',color: '#aea99c'}}>{formatDate(rowData.created)}</Text>
+                            <Text style={{flex:1, textAlign: 'center', fontStyle: 'italic',color: '#aea99c'}}>{rowData.created}</Text>
                         </View>
                     </View>
                 </TouchableHighlight>
@@ -189,7 +96,7 @@ class Comment extends Component{
     }
     onSubmit(){
         let {commentId,text} = this.state;
-        Keyboard.dismiss()
+        Keyboard.dismiss();
         if (commentId){
             this.props.addReply({ commentId, content: text})
         }else {

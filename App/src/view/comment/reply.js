@@ -33,7 +33,7 @@ export default class Reply extends Component{
                                 </View>
                                 <View style={styles.footer}>
                                     <Text style={{flex: 2, textAlign: 'right',fontStyle: 'italic', color: '#aea99c'}}>{item.userInfo.userName}</Text>
-                                    <Text style={{flex: 1, textAlign: 'center', fontStyle: 'italic', color: '#aea99c'}}>{formatDate(item.created)}</Text>
+                                    <Text style={{flex: 1, textAlign: 'center', fontStyle: 'italic', color: '#aea99c'}}>{item.created}</Text>
                                 </View>
                             </View>
                         </TouchableHighlight>

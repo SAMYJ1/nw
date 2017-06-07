@@ -2,10 +2,11 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import { StyleSheet, View, ListView, Text, RefreshControl } from 'react-native'
-import {Toast, List, SwipeAction, } from 'antd-mobile';
+import {Toast, List, SwipeAction, Modal } from 'antd-mobile';
 import { getStudentList, delStudent, getAllCourse } from '../../reducers/student'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
+const alert = Modal.alert;
 
 const ds = new ListView.DataSource({rowHasChanged: (r1,r2)=> r1 !==r2});
 
@@ -70,7 +71,10 @@ class Student extends Component{
     }
 
     onDeleteStudent(account){
-        this.props.delStudent({account})
+        alert('删除', '确定删除么???', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            { text: '确定', onPress: () => this.props.delStudent({account}), style: { fontWeight: 'bold' } },
+        ])
     }
 
     renderRow(rowData){

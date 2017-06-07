@@ -9,20 +9,21 @@ const LOGIN_ERR = 'USER.LOGIN_ERR';
 
 
 const initialState = {
+    loading: false,
     isLogin: false,
     account: '',
     character: '',
 };
 
 let onLoginLoad = (state=initialState, actionObj)=>{
-    return {...state, isLogin: false}
+    return {...state, isLogin: false, loading: true}
 } ;
 let onLoginSuc = (state=initialState, actionObj)=>{
     let {account, character} = actionObj.action;
-    return {...state, isLogin: true, account, character}
+    return {...state, isLogin: true, account, character, loading: false}
 } ;
 let onLoginErr = (state=initialState, actionObj)=>{
-    return {...state, isLogin: false}
+    return {...state, isLogin: false, loading: false}
 } ;
 
 

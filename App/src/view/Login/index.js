@@ -3,7 +3,8 @@ import {View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {login, } from '../../reducers/user'
-import {RadioGroup, RadioButton, } from 'react-native-flexi-radio-button'
+import { ActivityIndicator, Toast } from 'antd-mobile'
+import {RadioGroup, RadioButton,  } from 'react-native-flexi-radio-button'
 import NavigationUtil from '../../utils/NavigationUtil';
 
 class Login extends Component{
@@ -20,6 +21,7 @@ class Login extends Component{
     }
 
     componentWillReceiveProps(nextProps){
+        this.setState({animating: false})
         if (!this.props.isLogin && nextProps.isLogin && nextProps.character !=='admin'){
             console.log('will receive props', this.props.isLogin, nextProps.isLogin)
             // this.props.navigation.navigate('Home')
@@ -44,13 +46,15 @@ class Login extends Component{
     }
 
     onLogin(){
-        const { userName, password, role } = this.state;
-
+        const { userName, password, role,  } = this.state;
+        Toast.loading('登录中' , 0)
         this.props.login({account:userName, password, character:role})
+
+
     }
 
     render(){
-        const {userName, password, role} = this.state;
+        const {userName, password, role, } = this.state;
         const buttonStatus = (userName && password && role) === '' || false;
 
 
@@ -94,13 +98,13 @@ class Login extends Component{
                         />
                     </View>
                 </View>
+
             </View>
         )
     }
 }
 
 export default connect(state =>{
-    console.log('1111',state)
     return {
         ...state.user
     }

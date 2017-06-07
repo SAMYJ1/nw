@@ -16,7 +16,8 @@ const ADD_REPLY_SUC = 'EXCHANGE.ADD_REPLY_SUC';
 const ADD_REPLY_ERR = 'EXCHANGE.ADD_REPLY_ERR';
 
 const initialState = {
-    commentList: []
+    commentList: [],
+    reload: false,
 };
 
 let onGetCommentListLoad = (state=initialState,actionObj)=>{
@@ -31,23 +32,23 @@ let onGetCommentListErr = (state=initialState,actionObj)=>{
 };
 
 let onAddCommentLoad = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 let onAddCommentSuc = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: true}
 };
 let onAddCommentErr = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 
 let onAddReplyLoad = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 let onAddReplySuc = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: true}
 };
 let onAddReplyErr = (state=initialState,actionObj)=>{
-    return {...state}
+    return {...state, reload: false}
 };
 
 const actionHandlers = {

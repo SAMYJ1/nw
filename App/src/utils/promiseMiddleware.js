@@ -1,4 +1,4 @@
-
+import {Toast} from 'antd-mobile'
 let LOGIN_OUT = "USER.ON_LOGOUT";
 
 export default function promiseMiddleware( objMethods ) {
@@ -26,6 +26,12 @@ export default function promiseMiddleware( objMethods ) {
 
                     let errorMsg = result.message;
 
+                    if (errorMsg){
+                        Toast.hide();
+                        Toast.fail(errorMsg, 1, null, false)
+                    }
+
+
                     let error = {message:errorMsg};
 
                     let isLoginOut = false;
@@ -40,7 +46,11 @@ export default function promiseMiddleware( objMethods ) {
                 }else if(result.status === 'warning'){
                     return next({ ...rest, result, type: SUCCESS })
                 }else if(result.status === 'success' && result.data === null){
-
+                    let message = result.message;
+                    if (message){
+                        Toast.hide();
+                        Toast.success(message, 1, null, false)
+                    }
                     return next({ ...rest, result, type: SUCCESS })
                 }
                 return next({ ...rest, result, type: SUCCESS })

@@ -8,51 +8,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view';
 import { getCourseInfoList } from '../../reducers/course'
 
-/*const courseData = [
-    {
-        "courseName": '钢琴',
-        "list": [
-            {
-                "id": 1,
-                "courseType": '两年课程规划',
-                "customizedCourses":{
-                    "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
-                },
 
-            },
-            {
-                "id": 2,
-                "courseType": '一年课程规划',
-                "customizedCourses":{
-                    "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
-                },
-            },
-        ],
-        "title": { "col1": "收获成果", "col2": "1对1"}
-    },
-    {
-        "courseName": '吉他',
-        "list": [
-            {
-                "id": 1,
-                "courseType": '两年课程规划',
-                "customizedCourses":{
-                    "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
-                },
-
-            },
-            {
-                "id": 2,
-                "courseType": '三年课程规划',
-                "customizedCourses":{
-                    "col1":'1.学会50首曲目 2.掌握正确坐姿' , "col2": '45分钟/课时'
-                },
-            },
-        ],
-        "title": { "col1": "收获成果", "col2": "1对1"}
-    },
-
-];*/
 
 class Course extends Component{
     constructor(props){

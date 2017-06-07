@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import { StyleSheet, View, ListView, Text, RefreshControl } from 'react-native'
-import {Toast, List, SwipeAction, } from 'antd-mobile';
+import {Toast, List, SwipeAction, Modal } from 'antd-mobile';
 import { getCourseList,  deleteCourse } from '../../reducers/courseManage'
 import {getTeacherList} from '../../reducers/teacher'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-
+const alert = Modal.alert;
 const ds = new ListView.DataSource({rowHasChanged: (r1,r2)=> r1 !==r2});
 
 class CourseManage extends Component{
@@ -71,7 +71,11 @@ class CourseManage extends Component{
     }
 
     onDeleteCourse(courseName){
-        this.props.deleteCourse({courseName})
+        alert('删除', '确定删除么???', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            { text: '确定', onPress: () => this.props.deleteCourse({courseName}) , style: { fontWeight: 'bold' } },
+        ])
+
     }
 
     renderRow(rowData){
