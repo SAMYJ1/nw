@@ -353,7 +353,7 @@ class Course extends Component {
                     </Modal>
                     <Modal title="基础信息"
                            visible={showDetailModal}
-                           width={600}
+                           width={800}
                            maskClosable={false}
                            onOk={ ::this.onSaveDetail }
                            onCancel={ ::this.onCancelDetail }

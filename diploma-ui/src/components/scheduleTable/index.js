@@ -116,7 +116,7 @@ export default class Schedule extends Component{
                 },
             }
 
-        ]
+        ];
         this.initData = {
             id: 0,
             monday: {

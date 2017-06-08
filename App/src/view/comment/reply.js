@@ -32,8 +32,8 @@ export default class Reply extends Component{
                                     <Text>{item.content}</Text>
                                 </View>
                                 <View style={styles.footer}>
-                                    <Text style={{flex: 2, textAlign: 'right',fontStyle: 'italic', color: '#aea99c'}}>{item.userInfo.userName + '(' + item.userInfo.character + ')'}</Text>
-                                    <Text style={{flex: 1, textAlign: 'center', fontStyle: 'italic', color: '#aea99c'}}>{item.created}</Text>
+                                    <Text style={{flex: 2, textAlign: 'right',fontStyle: 'italic', color: '#aea99c',fontSize: 12}}>{item.userInfo.userName + '(' + item.userInfo.character + ')'}</Text>
+                                    <Text style={{flex: 1, textAlign: 'center', fontStyle: 'italic', color: '#aea99c',fontSize: 12}}>{item.created}</Text>
                                 </View>
                             </View>
                         </TouchableHighlight>
