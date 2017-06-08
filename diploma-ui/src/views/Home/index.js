@@ -36,7 +36,7 @@ class Home extends React.Component {
                     <div className='topArea'>
                         <div className="topAreaLeft">
                             <div>
-                                <h1>展示</h1>
+                                <h1>环境展示</h1>
 
                             </div>
                             <div className="carouselBox">
