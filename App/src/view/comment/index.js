@@ -66,7 +66,7 @@ class Comment extends Component{
                             <Text style={{lineHeight: 24}}>  {rowData.content}</Text>
                         </View>
                         <View style={styles.commentFooter}>
-                            <Text style={{flex: 2, textAlign: 'right', fontStyle: 'italic',color: '#aea99c'}}> {rowData.user.userName}</Text>
+                            <Text style={{flex: 2, textAlign: 'right', fontStyle: 'italic',color: '#aea99c'}}> {rowData.user.userName + '(' + rowData.user.character + ')'}</Text>
                             <Text style={{flex:1, textAlign: 'center', fontStyle: 'italic',color: '#aea99c'}}>{rowData.created}</Text>
                         </View>
                     </View>

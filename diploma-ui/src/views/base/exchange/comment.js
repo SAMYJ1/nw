@@ -130,8 +130,8 @@ export default class Comment extends Component{
                                 <div className={style.comment}>
                                     <div className={style.commentHeader}>
                                         <Row>
-                                            <Col span={6}>
-                                                <a>{comment.user.userName}</a>
+                                            <Col span={12}>
+                                                <a>{comment.user.userName + '(' + comment.user.character +')'}</a>
                                             </Col>
                                         </Row>
                                         <Row>

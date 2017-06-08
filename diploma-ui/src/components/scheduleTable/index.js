@@ -101,7 +101,7 @@ export default class Schedule extends Component{
                 )
             },
             {
-                title: 'operation',
+                title: '操作',
                 dataIndex: 'operation',
                 width: 100,
                 render: (text, record, index) => {
@@ -231,7 +231,7 @@ export default class Schedule extends Component{
 
         return (
             <div>
-                <Button onClick={ ::this.handleAdd }>Add</Button>
+                <Button onClick={ ::this.handleAdd }>增加行</Button>
                 <Table
                 rowKey={record=>record.id}
                 pagination={false}

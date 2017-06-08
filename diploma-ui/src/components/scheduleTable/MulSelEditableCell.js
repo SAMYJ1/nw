@@ -52,7 +52,7 @@ export default class MulSelEditableCell extends Component{
             this.setState({studentList})
         }
         if (this.props.value !==nextProps.value && this.props.record.studentList!==nextProps.record.studentList){
-            let data = studentList.find(item => item.courseName === nextProps.value.course);
+            let data = nextProps.record.studentList.find(item => item.courseName === nextProps.value.course);
             let studentOption = data ? data.studentList : [];
             this.setState({studentOption})
         }

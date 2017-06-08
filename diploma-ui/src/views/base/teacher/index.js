@@ -219,7 +219,7 @@ class Teacher extends Component{
             delete dataItem.time;
 
             Object.entries(dataItem).forEach(item=>{
-                if (item[1] !== null && item[1].course !== '' && item[1].address !== '' && item[1].students.length > 0){
+                if (item[1] !== null && item[1].course !== '' && item[1].address !== '' && item[1].students.length > 0 && time !== '-'){
                     let obj = {...item[1],time, week: item[0], teacher};
                     arr.push(obj)
                 }

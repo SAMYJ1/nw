@@ -20,7 +20,7 @@ export default class Reply extends Component{
 
                     <div className={style.replyItem} key={index}>
                         <div className={style.replyContent}>
-                            <a>{reply.userInfo.userName}</a>
+                            <a>{reply.userInfo.userName + '(' + reply.userInfo.character + ')'}</a>
                             <p>{reply.content}</p>
                         </div>
 

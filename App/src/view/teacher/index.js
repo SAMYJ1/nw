@@ -78,12 +78,12 @@ class Teacher extends Component{
                 autoClose
                 right={[
                     {
-                        text: 'Cancel',
+                        text: '取消',
                         onPress: () => console.log('cancel'),
                         style: { backgroundColor: '#ddd', color: 'white' },
                     },
                     {
-                        text: 'Delete',
+                        text: '删除',
                         onPress: () => this.onDeleteTeacher(rowData.account),
                         style: { backgroundColor: '#F4333C', color: 'white' },
                     },

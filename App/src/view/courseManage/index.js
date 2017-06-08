@@ -86,12 +86,12 @@ class CourseManage extends Component{
                 autoClose
                 right={[
                     {
-                        text: 'Cancel',
+                        text: '取消',
                         onPress: () => console.log('cancel'),
                         style: { backgroundColor: '#ddd', color: 'white' },
                     },
                     {
-                        text: 'Delete',
+                        text: '删除',
                         onPress: () => this.onDeleteCourse(rowData.courseName),
                         style: { backgroundColor: '#F4333C', color: 'white' },
                     },

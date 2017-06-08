@@ -58,7 +58,6 @@ export default class TimeEditableCell extends Component{
 
         let startTime = value ? value.split('-')[0]: null;
         let endTime = value ? value.split('-')[1]: null;
-        console.log('2222222222222222222222222',moment(null,this.format))
 
 
         return (
