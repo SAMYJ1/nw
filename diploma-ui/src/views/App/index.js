@@ -276,17 +276,22 @@ class App extends React.Component {
                     <div>
                         <Collapse accordion>
                             {
-                                messageList.map((item,index)=>{
+                                messageList.length > 0 ?
+                                    messageList.map((item, index) => {
 
-                                    return (
-                                        <Panel header={`${item.account}(${item.character})`} key={item.id}>
-                                            <div className={styles.messageItemBox}>
-                                                <p>{item.message}</p>
-                                                <div className={styles.messageDeleteIcon}><Icon type="delete" onClick={ this.onDeleteMessage.bind(this, item.id) }/></div>
-                                            </div>
-                                        </Panel>
-                                    )
-                                })
+                                        return (
+                                            <Panel header={`${item.account}(${item.character})`} key={item.id}>
+                                                <div className={styles.messageItemBox}>
+                                                    <p>{item.message}</p>
+                                                    <div className={styles.messageDeleteIcon}><Icon type="delete"
+                                                                                                    onClick={ this.onDeleteMessage.bind(this, item.id) }/>
+                                                    </div>
+                                                </div>
+                                            </Panel>
+                                        )
+                                    })
+                                    :
+                                    '暂无新消息'
                             }
 
                         </Collapse>
